@@ -1,0 +1,74 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  class?: string;
+  target?: '_blank';
+  rel?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  class: className,
+  target,
+  rel,
+} = Astro.props;
+---
+
+<a
+  class:list={['button-link', `button-link--${variant}`, className]}
+  {href}
+  {target}
+  rel={target === '_blank' ? (rel ?? 'noreferrer') : rel}
+>
+  <slot />
+</a>
+
+<style>
+  .button-link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid transparent;
+    border-radius: var(--radius-small);
+    font-size: var(--font-caption);
+    font-weight: 650;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .button-link--primary {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .button-link--secondary {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .button-link:active {
+    transform: translateY(1px) scale(0.985);
+  }
+
+  @media (hover: hover) {
+    .button-link--primary:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .button-link--secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+  }
+</style>

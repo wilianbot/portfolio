@@ -1,0 +1,30 @@
+---
+interface Props {
+  href?: string;
+}
+
+const { href = '#conteudo' } = Astro.props;
+---
+
+<a class="skip-link" {href}><slot>Pular para o conteúdo</slot></a>
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: var(--z-skip-link);
+    min-height: 2.75rem;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-small);
+    background: var(--color-text);
+    color: var(--color-background);
+    font-weight: 700;
+    transform: translateY(calc(-100% - var(--space-6)));
+    transition: transform var(--transition-fast);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+</style>

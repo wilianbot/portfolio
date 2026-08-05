@@ -1,18 +1,118 @@
 :root {
   color-scheme: light;
-  --color-background: #f5f3ee;
-  --color-surface: #fffdf8;
-  --color-text: #181816;
-  --color-muted: #5c5b55;
-  --color-accent: #245b4a;
-  --color-focus: #075fce;
-  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+
+  /* Color primitives */
+  --palette-stone-0: #ffffff;
+  --palette-stone-50: #f7f5f2;
+  --palette-stone-100: #efede8;
+  --palette-stone-200: #dedbd4;
+  --palette-stone-500: #706e68;
+  --palette-stone-700: #45443f;
+  --palette-stone-900: #1d1d1b;
+  --palette-stone-950: #141412;
+  --palette-purple-50: #f3efff;
+  --palette-purple-200: #d9cdfb;
+  --palette-purple-600: #6746c3;
+  --palette-purple-700: #5434ad;
+  --palette-green-50: #edf8f1;
+  --palette-green-700: #287348;
+  --palette-amber-50: #fff7e5;
+  --palette-amber-700: #8a5a00;
+  --palette-blue-50: #edf5ff;
+  --palette-blue-700: #245f9e;
+
+  /* Semantic colors */
+  --color-background: var(--palette-stone-50);
+  --color-surface: var(--palette-stone-0);
+  --color-surface-subtle: var(--palette-stone-100);
+  --color-text: var(--palette-stone-950);
+  --color-text-muted: #62605a;
+  --color-border: var(--palette-stone-200);
+  --color-border-strong: #bbb8b0;
+  --color-accent: var(--palette-purple-700);
+  --color-accent-hover: #43248f;
+  --color-accent-soft: var(--palette-purple-50);
+  --color-focus: #155fa8;
+  --color-positive: var(--palette-green-700);
+  --color-positive-soft: var(--palette-green-50);
+  --color-evolving: var(--palette-amber-700);
+  --color-evolving-soft: var(--palette-amber-50);
+  --color-planned: var(--palette-blue-700);
+  --color-planned-soft: var(--palette-blue-50);
+  --color-on-accent: #ffffff;
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
-  --space-4: 2rem;
-  --space-5: clamp(3rem, 9vw, 7rem);
-  --content-width: 72rem;
-  --radius-small: 0.25rem;
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono",
+    monospace;
+  --font-display: clamp(3.25rem, 10vw, 7.5rem);
+  --font-title: clamp(2rem, 5vw, 3.75rem);
+  --font-subtitle: clamp(1.25rem, 2vw, 1.5rem);
+  --font-body: 1rem;
+  --font-caption: 0.875rem;
+  --font-label: 0.75rem;
+  --font-code: 0.875rem;
+  --leading-display: 0.92;
+  --leading-title: 1.05;
+  --leading-body: 1.65;
+  --tracking-tight: -0.045em;
+  --tracking-label: 0.09em;
+
+  /* Layout and spacing */
+  --width-content: 72rem;
+  --width-reading: 42rem;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-section: clamp(4rem, 10vw, 8rem);
+
+  /* Shape, depth and motion */
+  --radius-small: 0.375rem;
+  --radius-medium: 0.75rem;
+  --radius-pill: 999px;
+  --border-thin: 1px solid var(--color-border);
+  --shadow-small: 0 1px 2px rgb(20 20 18 / 6%), 0 4px 14px rgb(20 20 18 / 4%);
+  --shadow-focus: 0 0 0 0.1875rem var(--color-background),
+    0 0 0 0.375rem var(--color-focus);
+  --transition-fast: 120ms ease-out;
+  --transition-base: 180ms ease-out;
+  --z-skip-link: 100;
+  --z-header: 20;
+
+  /* Conceptual breakpoints: compact 320px+, medium 640px+, wide 1024px+. */
+  --breakpoint-compact: 20rem;
+  --breakpoint-medium: 40rem;
+  --breakpoint-wide: 64rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-background: #171715;
+    --color-surface: #20201e;
+    --color-surface-subtle: #292926;
+    --color-text: #f4f2ed;
+    --color-text-muted: #b9b6ae;
+    --color-border: #3b3a36;
+    --color-border-strong: #56544e;
+    --color-accent: #b6a2f5;
+    --color-accent-hover: #cbbdf7;
+    --color-accent-soft: #30284a;
+    --color-focus: #78b7f1;
+    --color-positive: #82c99d;
+    --color-positive-soft: #1c3826;
+    --color-evolving: #e9bb61;
+    --color-evolving-soft: #3c3019;
+    --color-planned: #8ec1f2;
+    --color-planned-soft: #1d3347;
+    --color-on-accent: #1b122f;
+    --shadow-small: 0 1px 2px rgb(0 0 0 / 20%), 0 6px 18px rgb(0 0 0 / 14%);
+  }
 }

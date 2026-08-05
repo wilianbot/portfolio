@@ -1,0 +1,39 @@
+---
+interface Props {
+  label?: string;
+  tone?: 'neutral' | 'accent';
+  class?: string;
+}
+
+const { label, tone = 'neutral', class: className } = Astro.props;
+---
+
+<span
+  class:list={['icon-box', `icon-box--${tone}`, className]}
+  aria-hidden={label ? undefined : 'true'}
+  aria-label={label}
+  role={label ? 'img' : undefined}
+>
+  <slot />
+</span>
+
+<style>
+  .icon-box {
+    display: inline-grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-small);
+    font-family: var(--font-mono);
+  }
+
+  .icon-box--accent {
+    border-color: var(--palette-purple-200);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+</style>

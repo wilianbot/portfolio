@@ -1,0 +1,46 @@
+---
+interface Props {
+  href: string;
+  class?: string;
+  label?: string;
+}
+
+const { href, class: className, label } = Astro.props;
+---
+
+<a class:list={['text-link', className]} {href} aria-label={label}>
+  <span><slot /></span><span class="text-link__arrow" aria-hidden="true">↗</span>
+</a>
+
+<style>
+  .text-link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text);
+    font-size: var(--font-caption);
+    font-weight: 650;
+    text-decoration-color: var(--color-border-strong);
+    transition: color var(--transition-fast);
+  }
+
+  .text-link__arrow {
+    color: var(--color-accent);
+    transition: transform var(--transition-fast);
+  }
+
+  .text-link:active .text-link__arrow {
+    transform: translate(0.125rem, -0.125rem);
+  }
+
+  @media (hover: hover) {
+    .text-link:hover {
+      color: var(--color-accent);
+    }
+
+    .text-link:hover .text-link__arrow {
+      transform: translate(0.125rem, -0.125rem);
+    }
+  }
+</style>

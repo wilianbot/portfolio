@@ -1,0 +1,318 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Container from '../components/Container.astro';
+import Divider from '../components/Divider.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import IconBox from '../components/IconBox.astro';
+import Section from '../components/Section.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import Tag from '../components/Tag.astro';
+import TextLink from '../components/TextLink.astro';
+
+const colors = [
+  ['Fundo', 'var(--color-background)'],
+  ['Superfície', 'var(--color-surface)'],
+  ['Texto', 'var(--color-text)'],
+  ['Texto suave', 'var(--color-text-muted)'],
+  ['Assinatura', 'var(--color-accent)'],
+  ['Positivo', 'var(--color-positive)'],
+  ['Evolução', 'var(--color-evolving)'],
+  ['Planejamento', 'var(--color-planned)'],
+] as const;
+
+const spaces = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+---
+
+<BaseLayout
+  title="Design system — WR Labs"
+  description="Catálogo interno de tokens e componentes visuais da WR Labs."
+  noindex
+>
+  <header class="catalog-hero">
+    <Container>
+      <Eyebrow>Catálogo interno · v0.1</Eyebrow>
+      <h1>Quiet Product Lab</h1>
+      <p>
+        Um sistema visual silencioso e preciso, construído com tipografia,
+        espaço, linhas e pequenos sinais.
+      </p>
+    </Container>
+  </header>
+
+  <Section labelledby="cores-title">
+    <Container>
+      <Eyebrow>01 · Fundação</Eyebrow>
+      <h2 id="cores-title">Cores semânticas</h2>
+      <p class="section-intro">
+        O roxo assina ações e detalhes. Verde, âmbar e azul ficam reservados
+        para comunicar estados específicos — sempre acompanhados por texto.
+      </p>
+      <ul class="swatches" role="list">
+        {colors.map(([name, value]) => (
+          <li>
+            <span class="swatch" style={`--swatch-color: ${value}`}></span>
+            <strong>{name}</strong>
+            <code>{value.replace('var(', '').replace(')', '')}</code>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="subtle" labelledby="tipo-title">
+    <Container>
+      <Eyebrow>02 · Voz visual</Eyebrow>
+      <h2 id="tipo-title">Tipografia</h2>
+      <div class="type-specimens">
+        <div><span>Display</span><p class="type-display">Construir com calma.</p></div>
+        <div><span>Título</span><p class="type-title">Produtos digitais atentos.</p></div>
+        <div><span>Subtítulo</span><p class="type-subtitle">Clareza antes de ornamento.</p></div>
+        <div><span>Corpo</span><p class="type-body">Cada decisão deve ajudar a entender o produto e o trabalho por trás dele.</p></div>
+        <div><span>Legenda</span><p class="type-caption">Informação de apoio, sem competir pela atenção.</p></div>
+        <div><span>Label</span><p class="type-label">Detalhe de laboratório</p></div>
+        <div><span>Código</span><code class="type-code">const cuidado = true;</code></div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section labelledby="espaco-title">
+    <Container>
+      <Eyebrow>03 · Ritmo</Eyebrow>
+      <h2 id="espaco-title">Espaçamento</h2>
+      <div class="spacing-scale">
+        {spaces.map((space) => (
+          <div>
+            <code>space-{space}</code>
+            <span style={`--space-demo: var(--space-${space})`}></span>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="subtle" labelledby="componentes-title">
+    <Container>
+      <Eyebrow>04 · Elementos</Eyebrow>
+      <h2 id="componentes-title">Componentes base</h2>
+
+      <div class="component-group">
+        <h3>Ações e links</h3>
+        <div class="component-row">
+          <ButtonLink href="#componentes-title">Ação principal</ButtonLink>
+          <ButtonLink href="#componentes-title" variant="secondary">Ação secundária</ButtonLink>
+          <TextLink href="#componentes-title">Conhecer o sistema</TextLink>
+        </div>
+      </div>
+
+      <Divider label="Estados" />
+
+      <div class="component-group">
+        <h3>Status e categorias</h3>
+        <div class="component-row">
+          <StatusBadge status="positive">Disponível</StatusBadge>
+          <StatusBadge status="evolving">Em evolução</StatusBadge>
+          <StatusBadge status="planned">Planejado</StatusBadge>
+          <Tag>Produto digital</Tag>
+          <Tag>Estudo</Tag>
+        </div>
+      </div>
+
+      <Divider label="Símbolos" />
+
+      <div class="component-group">
+        <h3>Caixas de ícone</h3>
+        <div class="component-row">
+          <IconBox><span aria-hidden="true">⌁</span></IconBox>
+          <IconBox tone="accent"><span aria-hidden="true">＋</span></IconBox>
+          <IconBox label="Experimento ativo"><span aria-hidden="true">◇</span></IconBox>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <footer class="catalog-footer">
+    <Container>
+      <Divider />
+      <p>WR Labs · Design system interno · Não indexável</p>
+    </Container>
+  </footer>
+</BaseLayout>
+
+<style>
+  .catalog-hero {
+    padding-block: clamp(6rem, 16vw, 11rem) var(--space-section);
+    border-bottom: var(--border-thin);
+  }
+
+  .catalog-hero h1 {
+    max-width: 10ch;
+    margin: 0 0 var(--space-6);
+    font-size: var(--font-display);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-display);
+  }
+
+  .catalog-hero p,
+  .section-intro {
+    max-width: var(--width-reading);
+    margin-bottom: var(--space-7);
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  h2 {
+    margin-bottom: var(--space-4);
+    font-size: var(--font-title);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  h3 {
+    margin-bottom: var(--space-4);
+    font-size: var(--font-body);
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .swatches li {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .swatch {
+    height: 6rem;
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    background: var(--swatch-color);
+    box-shadow: var(--shadow-small);
+  }
+
+  .swatches strong {
+    font-size: var(--font-caption);
+  }
+
+  code,
+  .type-code {
+    overflow-wrap: anywhere;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-code);
+  }
+
+  .type-specimens {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .type-specimens > div {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: var(--border-thin);
+  }
+
+  .type-specimens span {
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .type-specimens p {
+    margin: 0;
+  }
+
+  .type-display {
+    font-size: var(--font-display);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-display);
+  }
+
+  .type-title {
+    font-size: var(--font-title);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  .type-subtitle {
+    font-size: var(--font-subtitle);
+  }
+
+  .type-body {
+    max-width: var(--width-reading);
+    font-size: var(--font-body);
+  }
+
+  .type-caption {
+    font-size: var(--font-caption);
+  }
+
+  .type-label {
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .type-code {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-thin);
+    border-radius: var(--radius-small);
+    background: var(--color-surface);
+  }
+
+  .spacing-scale {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .spacing-scale div {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .spacing-scale span {
+    width: var(--space-demo);
+    max-width: 100%;
+    height: 0.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-accent);
+  }
+
+  .component-group {
+    padding-block: var(--space-7);
+  }
+
+  .component-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .catalog-footer {
+    padding-block: var(--space-7);
+  }
+
+  .catalog-footer p {
+    margin: var(--space-5) 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+  }
+</style>

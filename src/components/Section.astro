@@ -1,0 +1,27 @@
+---
+interface Props {
+  labelledby?: string;
+  tone?: 'default' | 'subtle';
+  class?: string;
+}
+
+const { labelledby, tone = 'default', class: className } = Astro.props;
+---
+
+<section
+  class:list={['section', `section--${tone}`, className]}
+  aria-labelledby={labelledby}
+>
+  <slot />
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-section);
+  }
+
+  .section--subtle {
+    background: var(--color-surface-subtle);
+    border-block: var(--border-thin);
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+interface Props {
+  as?: 'p' | 'span';
+  class?: string;
+}
+
+const { as: Element = 'p', class: className }: Props = Astro.props;
+---
+
+<Element class:list={['eyebrow', className]}><slot /></Element>
+
+<style>
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-end: var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    font-weight: 750;
+    letter-spacing: var(--tracking-label);
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before {
+    width: 1.5rem;
+    height: 1px;
+    background: var(--color-accent);
+    content: '';
+  }
+</style>

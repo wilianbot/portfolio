@@ -1,12 +1,13 @@
 ---
 import { siteConfig } from '../config/site';
+import SkipLink from '../components/SkipLink.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
-
 
 const {
   title = siteConfig.title,
   description = siteConfig.description,
+  noindex = false,
 } = Astro.props;
 ---
 
@@ -18,12 +19,13 @@ const {
     <meta name="description" content={description} />
     <meta name="author" content={siteConfig.author} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f5f3ee" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#f7f5f2" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
   <body>
-    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <SkipLink />
     <main id="conteudo" tabindex="-1">
       <slot />
     </main>

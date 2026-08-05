@@ -1,0 +1,50 @@
+---
+interface Props {
+  status: 'positive' | 'evolving' | 'planned';
+  class?: string;
+}
+
+const { status, class: className } = Astro.props;
+---
+
+<span class:list={['status-badge', `status-badge--${status}`, className]}>
+  <span class="status-badge__mark" aria-hidden="true"></span>
+  <slot />
+</span>
+
+<style>
+  .status-badge {
+    display: inline-flex;
+    min-height: 1.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid currentColor;
+    border-radius: var(--radius-pill);
+    font-size: var(--font-caption);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .status-badge__mark {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .status-badge--positive {
+    background: var(--color-positive-soft);
+    color: var(--color-positive);
+  }
+
+  .status-badge--evolving {
+    background: var(--color-evolving-soft);
+    color: var(--color-evolving);
+  }
+
+  .status-badge--planned {
+    background: var(--color-planned-soft);
+    color: var(--color-planned);
+  }
+</style>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  as?: 'div' | 'article' | 'header' | 'footer';
+  size?: 'content' | 'reading';
+  class?: string;
+}
+
+const {
+  as: Element = 'div',
+  size = 'content',
+  class: className,
+}: Props = Astro.props;
+---
+
+<Element class:list={['container', `container--${size}`, className]}>
+  <slot />
+</Element>
+
+<style>
+  .container {
+    width: min(100% - (2 * var(--gutter)), var(--width-content));
+    margin-inline: auto;
+  }
+
+  .container--reading {
+    max-width: var(--width-reading);
+  }
+</style>

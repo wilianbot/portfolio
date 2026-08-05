@@ -8,7 +8,8 @@ html {
   background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans);
-  line-height: 1.5;
+  font-size: 100%;
+  line-height: var(--leading-body);
   text-size-adjust: 100%;
 }
 
@@ -16,66 +17,90 @@ body {
   min-width: 20rem;
   min-height: 100vh;
   margin: 0;
+  background: var(--color-background);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
   color: var(--color-accent);
+  text-decoration-thickness: 0.0625rem;
   text-underline-offset: 0.2em;
 }
 
-a:hover {
-  text-decoration-thickness: 0.14em;
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 0;
+  box-shadow: var(--shadow-focus);
 }
 
-:focus-visible {
-  outline: 0.1875rem solid var(--color-focus);
-  outline-offset: 0.1875rem;
+main:focus {
+  outline: 0;
 }
 
-.skip-link {
-  position: fixed;
-  top: var(--space-2);
-  left: var(--space-2);
-  z-index: 10;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-small);
-  background: var(--color-text);
-  color: var(--color-surface);
-  transform: translateY(calc(-100% - var(--space-4)));
+h1,
+h2,
+h3,
+p {
+  margin-block-start: 0;
 }
 
-.skip-link:focus {
-  transform: translateY(0);
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-text);
 }
 
 .page-shell {
   display: grid;
   align-content: center;
-  width: min(100% - 2rem, var(--content-width));
+  width: min(100% - (2 * var(--gutter)), var(--width-content));
   min-height: 100vh;
   margin-inline: auto;
-  padding-block: var(--space-5);
+  padding-block: var(--space-section);
 }
 
-.eyebrow,
-.status {
-  max-width: 40rem;
+.page-shell .eyebrow,
+.page-shell .status {
+  max-width: var(--width-reading);
   margin: 0;
-  color: var(--color-muted);
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-muted);
+  font-size: var(--font-subtitle);
 }
 
-h1 {
+.page-shell h1 {
   max-width: 12ch;
-  margin: var(--space-1) 0 var(--space-3);
-  font-size: clamp(3rem, 12vw, 8rem);
+  margin: var(--space-2) 0 var(--space-5);
+  font-size: var(--font-display);
   font-weight: 650;
-  letter-spacing: -0.06em;
-  line-height: 0.92;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-display);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .skip-link {
-    transition: transform 120ms ease-out;
+@media (hover: hover) {
+  a:hover {
+    text-decoration-thickness: 0.125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
