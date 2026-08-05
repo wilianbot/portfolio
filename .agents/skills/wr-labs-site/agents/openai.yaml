@@ -1,0 +1,6 @@
+interface:
+  display_name: "WR Labs Site"
+  short_description: "Diretrizes para desenvolver o site da WR Labs"
+  default_prompt: "Use $wr-labs-site para executar esta etapa do site da WR Labs."
+policy:
+  allow_implicit_invocation: true
