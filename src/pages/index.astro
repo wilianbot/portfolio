@@ -1,11 +1,158 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import Container from '../components/Container.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import ProductLabMark from '../components/ProductLabMark.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 ---
 
 <BaseLayout>
-  <section class="page-shell" aria-labelledby="page-title">
-    <p class="eyebrow">Laboratório de produtos digitais.</p>
-    <h1 id="page-title">WR Labs</h1>
-    <p class="status">Projeto configurado com sucesso.</p>
+  <SiteHeader />
+
+  <section class="hero" aria-labelledby="hero-title">
+    <Container>
+      <div class="hero__grid">
+        <div class="hero__content">
+          <Eyebrow>WR Labs — Product Studio</Eyebrow>
+          <h1 id="hero-title">
+            Produtos digitais simples,<br /> úteis e bem construídos.
+          </h1>
+          <p class="hero__description">
+            Crio aplicativos, plataformas e ferramentas para resolver problemas
+            reais, explorar ideias e transformar aprendizado em produtos.
+          </p>
+          <div class="hero__actions" aria-label="Ações principais">
+            <ButtonLink href="#produtos">Conhecer produtos</ButtonLink>
+            <ButtonLink href="#sobre" variant="secondary">Sobre a WR Labs</ButtonLink>
+          </div>
+        </div>
+
+        <div class="hero__visual">
+          <ProductLabMark />
+        </div>
+      </div>
+
+      <div class="principles" aria-label="Princípios da WR Labs">
+        <span>Simplicidade</span>
+        <span>Desempenho</span>
+        <span>Experiência</span>
+        <span>Evolução</span>
+      </div>
+    </Container>
   </section>
 </BaseLayout>
+
+<style>
+  .hero {
+    overflow: hidden;
+    padding-block: clamp(4rem, 9vw, 7.5rem) var(--space-7);
+  }
+
+  .hero__grid {
+    display: grid;
+    align-items: center;
+    gap: var(--space-7);
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    max-width: 13ch;
+    margin: 0 0 var(--space-6);
+    font-size: clamp(2.625rem, 8.5vw, 5.75rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 0.98;
+  }
+
+  .hero__description {
+    max-width: 38rem;
+    margin-bottom: var(--space-6);
+    color: var(--color-text-muted);
+    font-size: clamp(1.0625rem, 2vw, 1.25rem);
+    line-height: 1.6;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .hero__visual {
+    min-width: 0;
+  }
+
+  .principles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    align-items: center;
+    margin-top: clamp(3rem, 8vw, 6rem);
+    padding-top: var(--space-5);
+    border-top: var(--border-thin);
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .principles span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .principles span:not(:last-child)::after {
+    width: 0.1875rem;
+    height: 0.1875rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    content: '';
+  }
+
+  @media (min-width: 56rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(17rem, 0.75fr);
+      gap: clamp(2rem, 6vw, 6rem);
+    }
+  }
+
+  @media (max-width: 35rem) {
+    .hero {
+      padding-top: var(--space-7);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 13.5vw, 4.25rem);
+    }
+
+    h1 br {
+      display: none;
+    }
+
+    .hero__actions > :global(a) {
+      width: 100%;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+      letter-spacing: 0.06em;
+    }
+
+    .principles span {
+      gap: var(--space-3);
+    }
+
+    .principles span:not(:last-child)::after {
+      order: -1;
+    }
+  }
+</style>

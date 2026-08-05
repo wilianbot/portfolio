@@ -1,0 +1,132 @@
+---
+import Container from './Container.astro';
+
+const navigation = [
+  { label: 'Produtos', href: '/#produtos' },
+  { label: 'Sobre', href: '/#sobre' },
+  { label: 'Notas', href: '/#notas' },
+  { label: 'Contato', href: '/#contato' },
+] as const;
+---
+
+<header class="site-header">
+  <Container class="site-header__inner">
+    <a class="brand" href="/" aria-label="WR Labs — Página inicial">
+      <span class="brand__symbol" aria-hidden="true">WR</span>
+      <span class="brand__name">Labs</span>
+    </a>
+
+    <nav aria-label="Navegação principal">
+      <ul>
+        {navigation.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </Container>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--border-thin);
+    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+  }
+
+  .site-header__inner {
+    display: flex;
+    min-height: 4.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    padding-block: var(--space-3);
+  }
+
+  .brand {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .brand__symbol {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: 1px solid var(--color-text);
+    border-radius: var(--radius-small);
+    font-size: 0.6875rem;
+    letter-spacing: -0.06em;
+    line-height: 1;
+  }
+
+  .brand__name {
+    font-size: var(--font-caption);
+    letter-spacing: 0.02em;
+  }
+
+  nav,
+  ul {
+    min-width: 0;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding-inline: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  nav a:active {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 39.999rem) {
+    .site-header__inner {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    nav {
+      width: 100%;
+    }
+
+    ul {
+      justify-content: space-between;
+    }
+
+    nav a {
+      padding-inline: var(--space-1);
+    }
+  }
+
+  @media (hover: hover) {
+    .brand:hover .brand__symbol {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    nav a:hover {
+      color: var(--color-text);
+    }
+  }
+</style>
