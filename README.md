@@ -32,7 +32,7 @@ O projeto gera arquivos estáticos e pode ser publicado na Vercel ou Cloudflare 
 - Diretório de saída: `dist`
 - Variável `PUBLIC_SITE_URL`: domínio público completo, como `https://dominio.example`
 
-O sitemap é gerado pela integração oficial do Astro quando `PUBLIC_SITE_URL` está definida. Atualize também `src/config/site.ts` e `public/robots.txt` após a confirmação do domínio.
+O sitemap, canonical, Open Graph, JSON-LD e `robots.txt` usam essa variável sem exigir alterações no código. Consulte `docs/DEPLOY.md` e `docs/DOMAIN.md` antes de publicar.
 
 ## Skill do projeto
 

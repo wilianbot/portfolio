@@ -1,3 +1,5 @@
+import { normalizePublicSiteUrl } from '../lib/public-site-url';
+
 export const siteConfig = {
   name: 'WR Labs',
   title: 'WR Labs — Laboratório de produtos digitais',
@@ -6,7 +8,7 @@ export const siteConfig = {
   emailSubject: 'Contato pelo site da WR Labs',
   github: null as string | null,
   linkedin: null as string | null,
-  domain: import.meta.env.PUBLIC_SITE_URL ?? null,
+  domain: normalizePublicSiteUrl(import.meta.env.PUBLIC_SITE_URL) ?? null,
   language: 'pt-BR',
   author: 'Wilian',
   tagline: 'Produtos digitais construídos com atenção.',
