@@ -4,7 +4,6 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
 import {
   formatNoteDate,
   getRelatedNotes,
@@ -64,8 +63,6 @@ const articleStructuredData = {
   breadcrumbLabel={note.data.titulo}
   structuredData={articleStructuredData}
 >
-  <SiteHeader />
-
   <article>
     <header class="note-header">
       <Container size="reading">

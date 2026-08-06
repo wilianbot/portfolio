@@ -2,6 +2,7 @@
 import { siteConfig } from '../config/site';
 import SkipLink from '../components/SkipLink.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -12,6 +13,7 @@ interface Props {
   description?: string;
   noindex?: boolean;
   hideFooter?: boolean;
+  hideHeader?: boolean;
   ogImage?: string;
   ogImageAlt?: string;
   ogType?: 'website' | 'article';
@@ -26,6 +28,7 @@ const {
   description = siteConfig.description,
   noindex = false,
   hideFooter = false,
+  hideHeader = false,
   ogImage,
   ogImageAlt = title,
   ogType = 'website',
@@ -196,6 +199,7 @@ const serializedJsonLd = JSON.stringify(jsonLdEntries).replaceAll('<', '\\u003c'
   </head>
   <body>
     <SkipLink />
+    {!hideHeader && <SiteHeader />}
     <main id="conteudo" tabindex="-1">
       <slot />
     </main>

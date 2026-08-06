@@ -6,7 +6,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ButtonLink from '../../components/ButtonLink.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
 import StatusBadge from '../../components/StatusBadge.astro';
 import Tag from '../../components/Tag.astro';
 import {
@@ -82,8 +81,6 @@ const productStructuredData = canDescribeAsSoftware
   breadcrumbLabel={data.nome}
   structuredData={productStructuredData}
 >
-  <SiteHeader />
-
   <article>
     <header class="case-header">
       <Container>

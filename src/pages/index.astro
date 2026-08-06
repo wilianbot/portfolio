@@ -8,7 +8,6 @@ import Eyebrow from '../components/Eyebrow.astro';
 import ProductLabMark from '../components/ProductLabMark.astro';
 import ProductList from '../components/ProductList.astro';
 import Section from '../components/Section.astro';
-import SiteHeader from '../components/SiteHeader.astro';
 import TextLink from '../components/TextLink.astro';
 import {
   filterFeaturedProducts,
@@ -26,8 +25,6 @@ const labProducts = filterLabActivityProducts(products, 2);
 ---
 
 <BaseLayout>
-  <SiteHeader />
-
   <section class="hero" aria-labelledby="hero-title">
     <Container>
       <div class="hero__grid">
@@ -40,7 +37,7 @@ const labProducts = filterLabActivityProducts(products, 2);
             Crio aplicativos, plataformas e ferramentas para resolver problemas
             reais, explorar ideias e transformar aprendizado em produtos.
           </p>
-          <div class="hero__actions" aria-label="Ações principais">
+          <div class="hero__actions" role="group" aria-label="Ações principais">
             <ButtonLink href="#produtos">Conhecer produtos</ButtonLink>
             <ButtonLink href="/sobre/" variant="secondary">Sobre a WR Labs</ButtonLink>
           </div>
@@ -51,12 +48,12 @@ const labProducts = filterLabActivityProducts(products, 2);
         </div>
       </div>
 
-      <div class="principles" aria-label="Princípios da WR Labs">
-        <span>Simplicidade</span>
-        <span>Desempenho</span>
-        <span>Experiência</span>
-        <span>Evolução</span>
-      </div>
+      <ul class="principles" aria-label="Princípios da WR Labs">
+        <li>Simplicidade</li>
+        <li>Desempenho</li>
+        <li>Experiência</li>
+        <li>Evolução</li>
+      </ul>
     </Container>
   </section>
 
@@ -161,6 +158,8 @@ const labProducts = filterLabActivityProducts(products, 2);
     gap: var(--space-3) var(--space-5);
     align-items: center;
     margin-top: clamp(3rem, 8vw, 6rem);
+    margin-bottom: 0;
+    padding-left: 0;
     padding-top: var(--space-5);
     border-top: var(--border-thin);
     color: var(--color-text-muted);
@@ -168,15 +167,16 @@ const labProducts = filterLabActivityProducts(products, 2);
     font-weight: 700;
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
+    list-style: none;
   }
 
-  .principles span {
+  .principles li {
     display: inline-flex;
     align-items: center;
     gap: var(--space-5);
   }
 
-  .principles span:not(:last-child)::after {
+  .principles li:not(:last-child)::after {
     width: 0.1875rem;
     height: 0.1875rem;
     border-radius: 50%;
@@ -283,11 +283,11 @@ const labProducts = filterLabActivityProducts(products, 2);
       letter-spacing: 0.06em;
     }
 
-    .principles span {
+    .principles li {
       gap: var(--space-3);
     }
 
-    .principles span:not(:last-child)::after {
+    .principles li:not(:last-child)::after {
       order: -1;
     }
   }

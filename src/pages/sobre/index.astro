@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
 import TextLink from '../../components/TextLink.astro';
 import { siteConfig } from '../../config/site';
 
@@ -33,8 +32,6 @@ const personStructuredData = {
   description="Sobre Wilian, sua jornada em desenvolvimento de software e a criação da WR Labs."
   structuredData={personStructuredData}
 >
-  <SiteHeader />
-
   <header class="about-hero">
     <Container>
       <Eyebrow>Sobre · Wilian</Eyebrow>

@@ -3,7 +3,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import SiteHeader from '../../components/SiteHeader.astro';
 import TextLink from '../../components/TextLink.astro';
 import { formatNoteDate, sortPublishedNotes } from '../../lib/notes';
 
@@ -14,8 +13,6 @@ const publishedNotes = sortPublishedNotes(await getCollection('notes'));
   title="Notas — WR Labs"
   description="Notas da WR Labs sobre construção de produtos, desenvolvimento e decisões técnicas."
 >
-  <SiteHeader />
-
   <header class="notes-header">
     <Container>
       <Eyebrow>Caderno aberto</Eyebrow>

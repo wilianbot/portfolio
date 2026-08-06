@@ -22,7 +22,11 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteC
         <p>{siteConfig.contact.description}</p>
       </div>
 
-      <div class="contact-callout__actions" aria-label="Canais de contato">
+      <div
+        class="contact-callout__actions"
+        role="group"
+        aria-label="Canais de contato"
+      >
         <ButtonLink href={emailHref}>Enviar email</ButtonLink>
         {siteConfig.linkedin && (
           <ButtonLink

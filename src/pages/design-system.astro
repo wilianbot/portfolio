@@ -29,6 +29,7 @@ const spaces = [1, 2, 3, 4, 5, 6, 7, 8] as const;
   description="Catálogo interno de tokens e componentes visuais da WR Labs."
   noindex
   hideFooter
+  hideHeader
 >
   <header class="catalog-hero">
     <Container>
@@ -49,7 +50,7 @@ const spaces = [1, 2, 3, 4, 5, 6, 7, 8] as const;
         O roxo assina ações e detalhes. Verde, âmbar e azul ficam reservados
         para comunicar estados específicos — sempre acompanhados por texto.
       </p>
-      <ul class="swatches" role="list">
+      <ul class="swatches">
         {colors.map(([name, value]) => (
           <li>
             <span class="swatch" style={`--swatch-color: ${value}`}></span>
