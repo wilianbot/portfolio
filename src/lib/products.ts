@@ -50,6 +50,16 @@ export function formatProductStatus(
   return status ? statusLabels[status] : null;
 }
 
+export function formatProductDate(date: Date | undefined): string | null {
+  if (!date || Number.isNaN(date.getTime())) return null;
+
+  return new Intl.DateTimeFormat('pt-BR', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
 export function isUsableLink(
   value: string | null | undefined,
 ): value is string {

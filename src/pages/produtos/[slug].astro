@@ -1,0 +1,540 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ButtonLink from '../../components/ButtonLink.astro';
+import Container from '../../components/Container.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Tag from '../../components/Tag.astro';
+import {
+  formatProductDate,
+  formatProductStatus,
+  getPrimaryProductAction,
+  sortProducts,
+  validateProductCollection,
+} from '../../lib/products';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  previous: CollectionEntry<'products'> | null;
+  next: CollectionEntry<'products'> | null;
+}
+
+export const getStaticPaths = (async () => {
+  const products = sortProducts(await getCollection('products'));
+  validateProductCollection(products);
+
+  return products.map((product, index) => ({
+    params: { slug: product.data.slug },
+    props: {
+      product,
+      previous: products[index - 1] ?? null,
+      next: products[index + 1] ?? null,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { product, previous, next } = Astro.props;
+const { data } = product;
+const status = formatProductStatus(data.status);
+const updatedAt = formatProductDate(data.ultimaAtualizacao);
+const action = getPrimaryProductAction(product);
+const statusTone =
+  data.status === 'publicado' || data.status === 'online'
+    ? 'positive'
+    : data.status === 'em evolução'
+      ? 'evolving'
+      : 'planned';
+const fallbackText = 'Informação pública ainda não documentada.';
+const seoDescription =
+  data.seoDescription ??
+  data.descricaoCurta ??
+  `Case study de ${data.nome} na WR Labs.`;
+---
+
+<BaseLayout
+  title={data.seoTitle ?? `${data.nome} — Produtos — WR Labs`}
+  description={seoDescription}
+>
+  <SiteHeader />
+
+  <article>
+    <header class="case-header">
+      <Container>
+        <div class="case-header__grid">
+          <div>
+            <Eyebrow>{data.categoria ?? 'Case study'}</Eyebrow>
+            <h1>{data.nome}</h1>
+            <p class="case-header__description">
+              {data.descricaoCurta ?? data.resumoCompleto ?? fallbackText}
+            </p>
+            {data.contexto && <p class="case-header__context">{data.contexto}</p>}
+            {data.creditos && <p class="case-header__credit">{data.creditos}</p>}
+          </div>
+
+          <div class="case-header__aside">
+            <dl class="case-meta">
+              <div>
+                <dt>Status</dt>
+                <dd>
+                  {status ? (
+                    <StatusBadge status={statusTone}>{status}</StatusBadge>
+                  ) : (
+                    'Não confirmado'
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt>Plataforma</dt>
+                <dd>{data.plataforma?.join(' · ') ?? 'Não documentada'}</dd>
+              </div>
+              <div>
+                <dt>Atualização</dt>
+                <dd>
+                  {data.ultimaAtualizacao && updatedAt ? (
+                    <time datetime={data.ultimaAtualizacao.toISOString()}>{updatedAt}</time>
+                  ) : (
+                    'Não documentada'
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            {action && (
+              <ButtonLink
+                href={action.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {action.label}
+              </ButtonLink>
+            )}
+          </div>
+        </div>
+      </Container>
+    </header>
+
+    <section class="case-section" aria-labelledby="visao-geral-title">
+      <Container>
+        <div class="case-section__layout">
+          <div>
+            <Eyebrow>01 · Visão geral</Eyebrow>
+            <h2 id="visao-geral-title">Entender antes de construir.</h2>
+          </div>
+          <dl class="case-details">
+            <div>
+              <dt>Problema</dt>
+              <dd>
+                {data.problemasResolvidos?.length ? (
+                  <ul>{data.problemasResolvidos.map((item) => <li>{item}</li>)}</ul>
+                ) : fallbackText}
+              </dd>
+            </div>
+            <div>
+              <dt>Público</dt>
+              <dd>{data.publico ?? fallbackText}</dd>
+            </div>
+            <div>
+              <dt>Proposta</dt>
+              <dd>{data.proposta ?? data.resumoCompleto ?? fallbackText}</dd>
+            </div>
+            {data.responsabilidades?.length && (
+              <div>
+                <dt>Responsabilidades</dt>
+                <dd><ul>{data.responsabilidades.map((item) => <li>{item}</li>)}</ul></dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      </Container>
+    </section>
+
+    <section class="case-section case-section--subtle" aria-labelledby="construcao-title">
+      <Container>
+        <div class="case-section__layout">
+          <div>
+            <Eyebrow>02 · Produto</Eyebrow>
+            <h2 id="construcao-title">O que foi construído.</h2>
+          </div>
+          {data.funcionalidades?.length ? (
+            <ul class="feature-list">
+              {data.funcionalidades.map((feature, index) => (
+                <li><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>{feature}</li>
+              ))}
+            </ul>
+          ) : (
+            <p class="empty-state">{fallbackText}</p>
+          )}
+        </div>
+      </Container>
+    </section>
+
+    <section class="case-section" aria-labelledby="tecnica-title">
+      <Container>
+        <div class="case-section__layout">
+          <div>
+            <Eyebrow>03 · Engenharia</Eyebrow>
+            <h2 id="tecnica-title">Decisões técnicas.</h2>
+            <p class="section-note">Detalhes técnicos vêm depois do contexto do produto.</p>
+          </div>
+          <dl class="technical-grid">
+            <div><dt>Arquitetura</dt><dd>{data.arquitetura ?? fallbackText}</dd></div>
+            <div>
+              <dt>Stack</dt>
+              <dd>
+                {data.tecnologiasPrincipais?.length ? (
+                  <ul class="tag-list">
+                    {data.tecnologiasPrincipais.map((technology) => <li><Tag>{technology}</Tag></li>)}
+                  </ul>
+                ) : fallbackText}
+              </dd>
+            </div>
+            <div><dt>Armazenamento</dt><dd>{data.armazenamento ?? fallbackText}</dd></div>
+            <div><dt>Segurança</dt><dd>{data.seguranca ?? fallbackText}</dd></div>
+            <div><dt>Performance</dt><dd>{data.performance ?? fallbackText}</dd></div>
+            {data.decisoesTecnicas?.length && (
+              <div>
+                <dt>Outras decisões</dt>
+                <dd><ul>{data.decisoesTecnicas.map((item) => <li>{item}</li>)}</ul></dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      </Container>
+    </section>
+
+    <section class="case-section case-section--subtle" aria-labelledby="aprendizados-title">
+      <Container>
+        <div class="case-section__layout">
+          <div>
+            <Eyebrow>04 · Processo</Eyebrow>
+            <h2 id="aprendizados-title">Desafios e aprendizados.</h2>
+          </div>
+          <div class="learning-grid">
+            <div>
+              <h3>Desafios reais</h3>
+              {data.desafios?.length ? <ul>{data.desafios.map((item) => <li>{item}</li>)}</ul> : <p>{fallbackText}</p>}
+            </div>
+            <div>
+              <h3>Soluções adotadas</h3>
+              {data.solucoesAdotadas?.length ? <ul>{data.solucoesAdotadas.map((item) => <li>{item}</li>)}</ul> : <p>{fallbackText}</p>}
+            </div>
+            <div>
+              <h3>Aprendizados</h3>
+              {data.aprendizados?.length ? <ul>{data.aprendizados.map((item) => <li>{item}</li>)}</ul> : <p>{fallbackText}</p>}
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+
+    {data.galeria?.length && (
+      <section class="case-section" aria-labelledby="galeria-title">
+        <Container>
+          <Eyebrow>05 · Galeria</Eyebrow>
+          <h2 id="galeria-title">O produto em contexto.</h2>
+          <div class="gallery">
+            {data.galeria.map((item) => (
+              <figure>
+                <Picture
+                  src={item.imagem}
+                  alt={item.alt}
+                  formats={['avif', 'webp']}
+                  widths={[480, 800, 1120]}
+                  sizes="(max-width: 48rem) calc(100vw - 2rem), 70rem"
+                  loading="lazy"
+                  decoding="async"
+                />
+                {item.legenda && <figcaption>{item.legenda}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </Container>
+      </section>
+    )}
+
+    <section class="case-section" aria-labelledby="estado-title">
+      <Container>
+        <div class="case-section__layout">
+          <div>
+            <Eyebrow>{data.galeria?.length ? '06' : '05'} · Estado atual</Eyebrow>
+            <h2 id="estado-title">Onde o produto está agora.</h2>
+          </div>
+          <dl class="case-details">
+            <div><dt>Status</dt><dd>{status ?? 'Não confirmado'}</dd></div>
+            <div>
+              <dt>Próximos passos</dt>
+              <dd>{data.proximosPassos?.length ? <ul>{data.proximosPassos.map((item) => <li>{item}</li>)}</ul> : fallbackText}</dd>
+            </div>
+            <div>
+              <dt>Limitações</dt>
+              <dd>{data.limitacoes?.length ? <ul>{data.limitacoes.map((item) => <li>{item}</li>)}</ul> : fallbackText}</dd>
+            </div>
+          </dl>
+        </div>
+      </Container>
+    </section>
+
+    <nav class="case-navigation" aria-label="Navegação entre produtos">
+      <Container>
+        <a class="case-navigation__back" href="/produtos/">← Todos os produtos</a>
+        <div class="case-navigation__adjacent">
+          {previous && (
+            <a href={`/produtos/${previous.data.slug}/`}>
+              <span>Anterior</span>
+              {previous.data.nome}
+            </a>
+          )}
+          {next && (
+            <a href={`/produtos/${next.data.slug}/`}>
+              <span>Próximo</span>
+              {next.data.nome}
+            </a>
+          )}
+        </div>
+      </Container>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .case-header {
+    padding-block: clamp(4rem, 10vw, 8rem);
+    border-bottom: var(--border-thin);
+  }
+
+  .case-header__grid,
+  .case-section__layout {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  h1 {
+    margin-bottom: var(--space-5);
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-display);
+  }
+
+  .case-header__description {
+    max-width: var(--width-reading);
+    margin-bottom: var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .case-header__context,
+  .case-header__credit {
+    max-width: var(--width-reading);
+    margin-bottom: var(--space-3);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-accent);
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+  }
+
+  .case-header__aside {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .case-meta,
+  .case-details,
+  .technical-grid {
+    width: 100%;
+    margin: 0;
+  }
+
+  .case-meta > div,
+  .case-details > div,
+  .technical-grid > div {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-4);
+    border-top: var(--border-thin);
+  }
+
+  dt {
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+  }
+
+  dd ul,
+  .learning-grid ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+
+  .case-section {
+    padding-block: var(--space-section);
+    border-bottom: var(--border-thin);
+  }
+
+  .case-section--subtle {
+    background: var(--color-surface-subtle);
+  }
+
+  h2 {
+    max-width: 13ch;
+    margin-bottom: var(--space-5);
+    font-size: var(--font-title);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  .section-note,
+  .empty-state,
+  .learning-grid p {
+    max-width: 28rem;
+    color: var(--color-text-muted);
+  }
+
+  .feature-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .feature-list li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-top: var(--border-thin);
+  }
+
+  .feature-list span {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-label);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .learning-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .learning-grid > div {
+    padding-top: var(--space-4);
+    border-top: var(--border-thin);
+  }
+
+  .learning-grid h3 {
+    font-size: var(--font-body);
+  }
+
+  .gallery {
+    display: grid;
+    gap: var(--space-7);
+    margin-top: var(--space-7);
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 48rem;
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    object-fit: contain;
+  }
+
+  figcaption {
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+  }
+
+  .case-navigation {
+    padding-block: var(--space-7);
+  }
+
+  .case-navigation > :global(.container) {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .case-navigation a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    color: var(--color-text);
+    font-weight: 650;
+    text-decoration-color: var(--color-border-strong);
+  }
+
+  .case-navigation__adjacent {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .case-navigation__adjacent a {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: var(--space-4);
+    border: var(--border-thin);
+    border-radius: var(--radius-small);
+    text-decoration: none;
+  }
+
+  .case-navigation__adjacent span {
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 48rem) {
+    .case-header__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.55fr);
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+
+    .case-section__layout {
+      grid-template-columns: minmax(13rem, 0.6fr) minmax(0, 1fr);
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+
+    .learning-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .case-navigation > :global(.container) {
+      grid-template-columns: auto 1fr;
+      align-items: start;
+    }
+
+    .case-navigation__adjacent {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      justify-self: end;
+      width: min(100%, 36rem);
+    }
+  }
+</style>

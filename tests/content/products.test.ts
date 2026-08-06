@@ -5,6 +5,7 @@ import {
   filterFeaturedProducts,
   filterLabActivityProducts,
   formatProductStatus,
+  formatProductDate,
   getAvailableProductLinks,
   getPrimaryProductAction,
   isUsableLink,
@@ -45,6 +46,11 @@ test('filtra somente destaques e preserva a ordenação', () => {
 test('formata apenas status conhecidos e aceita status ausente', () => {
   assert.equal(formatProductStatus('em desenvolvimento'), 'Em desenvolvimento');
   assert.equal(formatProductStatus(undefined), null);
+});
+
+test('formata atualização sem deslocamento de fuso e aceita data ausente', () => {
+  assert.equal(formatProductDate(new Date('2026-08-05')), 'agosto de 2026');
+  assert.equal(formatProductDate(undefined), null);
 });
 
 test('descarta links vazios, inválidos e protocolos não web', () => {

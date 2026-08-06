@@ -38,7 +38,9 @@ const symbol = Array.from(data.nome)[0]?.toLocaleUpperCase('pt-BR') ?? '·';
 
     <div class="product-row__content">
       {data.categoria && <p class="product-row__category">{data.categoria}</p>}
-      <h3 id={`produto-${data.slug}`}>{data.nome}</h3>
+      <h3 id={`produto-${data.slug}`}>
+        <a href={`/produtos/${data.slug}/`}>{data.nome}</a>
+      </h3>
       {data.descricaoCurta && (
         <p class="product-row__description">{data.descricaoCurta}</p>
       )}
@@ -127,6 +129,18 @@ const symbol = Array.from(data.nome)[0]?.toLocaleUpperCase('pt-BR') ?? '·';
     font-weight: 650;
     letter-spacing: var(--tracking-tight);
     line-height: var(--leading-title);
+  }
+
+  h3 a {
+    color: inherit;
+    text-decoration-color: var(--color-border-strong);
+    text-decoration-thickness: 0.0625rem;
+  }
+
+  @media (hover: hover) {
+    h3 a:hover {
+      color: var(--color-accent);
+    }
   }
 
   .product-row__description {
