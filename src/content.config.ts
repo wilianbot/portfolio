@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -72,4 +72,40 @@ const products = defineCollection({
     }),
 });
 
-export const collections = { products };
+const notes = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
+  schema: z
+    .object({
+      titulo: requiredText,
+      resumo: requiredText,
+      data: z.coerce.date().optional(),
+      atualizacao: z.coerce.date().optional(),
+      tema: requiredText,
+      tempoLeitura: z.number().int().positive().optional(),
+      projetoRelacionado: reference('products').optional(),
+      rascunho: z.boolean().default(true),
+      seoTitle: optionalText,
+      seoDescription: optionalText,
+    })
+    .superRefine((note, context) => {
+      if (note.rascunho) return;
+
+      const requiredPublicationFields = [
+        ['data', note.data],
+        ['tempoLeitura', note.tempoLeitura],
+        ['seoTitle', note.seoTitle],
+        ['seoDescription', note.seoDescription],
+      ] as const;
+
+      for (const [field, value] of requiredPublicationFields) {
+        if (value !== undefined) continue;
+        context.addIssue({
+          code: 'custom',
+          message: `${field} é obrigatório para uma nota publicada`,
+          path: [field],
+        });
+      }
+    }),
+});
+
+export const collections = { products, notes };

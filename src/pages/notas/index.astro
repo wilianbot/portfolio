@@ -1,0 +1,214 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import TextLink from '../../components/TextLink.astro';
+import { formatNoteDate, sortPublishedNotes } from '../../lib/notes';
+
+const publishedNotes = sortPublishedNotes(await getCollection('notes'));
+---
+
+<BaseLayout
+  title="Notas — WR Labs"
+  description="Notas da WR Labs sobre construção de produtos, desenvolvimento e decisões técnicas."
+>
+  <SiteHeader />
+
+  <header class="notes-header">
+    <Container>
+      <Eyebrow>Caderno aberto</Eyebrow>
+      <h1>Notas sobre construir e evoluir produtos.</h1>
+      <p>
+        Aprendizados reais sobre desenvolvimento, arquitetura, publicação,
+        decisões, erros e correções — sem transformar o espaço em um blog
+        genérico.
+      </p>
+    </Container>
+  </header>
+
+  <section class="notes-section" aria-labelledby="notes-title">
+    <Container>
+      <h2 id="notes-title" class="visually-hidden">Notas publicadas</h2>
+
+      {publishedNotes.length > 0 ? (
+        <ol class="notes-list">
+          {publishedNotes.map((note, index) => {
+            const publishedAt = formatNoteDate(note.data.data);
+            return (
+              <li>
+                <article aria-labelledby={`nota-${note.id}`}>
+                  <span class="notes-list__number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <p class="notes-list__theme">{note.data.tema}</p>
+                    <h3 id={`nota-${note.id}`}>
+                      <a href={`/notas/${note.id}/`}>{note.data.titulo}</a>
+                    </h3>
+                    <p class="notes-list__summary">{note.data.resumo}</p>
+                  </div>
+                  <div class="notes-list__meta">
+                    {publishedAt && <time datetime={note.data.data?.toISOString()}>{publishedAt}</time>}
+                    {note.data.tempoLeitura && <span>{note.data.tempoLeitura} min de leitura</span>}
+                    <TextLink href={`/notas/${note.id}/`} arrow="right">Ler nota</TextLink>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <div class="notes-empty">
+          <span aria-hidden="true">✦</span>
+          <div>
+            <h3>Notas em revisão.</h3>
+            <p>
+              Nenhuma nota foi publicada ainda. Rascunhos permanecem privados
+              até passarem por revisão humana.
+            </p>
+          </div>
+        </div>
+      )}
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  .notes-header {
+    padding-block: clamp(4rem, 11vw, 8.5rem);
+    border-bottom: var(--border-thin);
+  }
+
+  .notes-header h1 {
+    max-width: 14ch;
+    margin-bottom: var(--space-6);
+    font-size: clamp(2.75rem, 8vw, 6rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 0.98;
+  }
+
+  .notes-header p {
+    max-width: var(--width-reading);
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .notes-section {
+    padding-block: var(--space-section);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .notes-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .notes-list > li {
+    border-top: var(--border-thin);
+  }
+
+  .notes-list > li:last-child {
+    border-bottom: var(--border-thin);
+  }
+
+  .notes-list article {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) minmax(10rem, 0.35fr);
+    gap: var(--space-6);
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .notes-list__number,
+  .notes-list__theme,
+  .notes-list__meta {
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+  }
+
+  .notes-list__number {
+    font-family: var(--font-mono);
+  }
+
+  .notes-list__theme {
+    margin-bottom: var(--space-2);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  .notes-list h3 {
+    margin-bottom: var(--space-4);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    line-height: var(--leading-title);
+  }
+
+  .notes-list h3 a {
+    color: var(--color-text);
+    text-decoration-color: var(--color-border-strong);
+  }
+
+  .notes-list__summary {
+    max-width: 36rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .notes-list__meta {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .notes-empty {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 30rem);
+    gap: var(--space-5);
+    padding-block: var(--space-7);
+    border-block: var(--border-thin);
+  }
+
+  .notes-empty > span {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: var(--border-thin);
+    border-radius: 50%;
+    color: var(--color-accent);
+  }
+
+  .notes-empty h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  .notes-empty p {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 47.999rem) {
+    .notes-list article {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+
+    .notes-list__meta {
+      grid-column: 2;
+    }
+  }
+</style>

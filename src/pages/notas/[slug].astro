@@ -1,0 +1,192 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import {
+  formatNoteDate,
+  getRelatedNotes,
+  sortPublishedNotes,
+} from '../../lib/notes';
+
+interface Props {
+  note: CollectionEntry<'notes'>;
+  relatedNotes: CollectionEntry<'notes'>[];
+}
+
+export const getStaticPaths = (async () => {
+  const publishedNotes = sortPublishedNotes(await getCollection('notes'));
+
+  return publishedNotes.map((note) => ({
+    params: { slug: note.id },
+    props: {
+      note,
+      relatedNotes: getRelatedNotes(note, publishedNotes),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { note, relatedNotes } = Astro.props;
+const { Content } = await render(note);
+const publishedAt = formatNoteDate(note.data.data);
+const updatedAt = formatNoteDate(note.data.atualizacao);
+---
+
+<BaseLayout
+  title={note.data.seoTitle ?? `${note.data.titulo} — Notas — WR Labs`}
+  description={note.data.seoDescription ?? note.data.resumo}
+>
+  <SiteHeader />
+
+  <article>
+    <header class="note-header">
+      <Container size="reading">
+        <Eyebrow>{note.data.tema}</Eyebrow>
+        <h1>{note.data.titulo}</h1>
+        <p class="note-header__summary">{note.data.resumo}</p>
+        <div class="note-meta">
+          {publishedAt && <time datetime={note.data.data?.toISOString()}>{publishedAt}</time>}
+          {updatedAt && <span>Atualizada em <time datetime={note.data.atualizacao?.toISOString()}>{updatedAt}</time></span>}
+          {note.data.tempoLeitura && <span>{note.data.tempoLeitura} min de leitura</span>}
+        </div>
+      </Container>
+    </header>
+
+    <div class="note-body">
+      <Container size="reading">
+        <div class="prose"><Content /></div>
+      </Container>
+    </div>
+
+    <nav class="note-navigation" aria-label="Navegação de notas">
+      <Container size="reading">
+        <a class="note-navigation__back" href="/notas/">← Todas as notas</a>
+        {relatedNotes.length > 0 && (
+          <div class="related-notes">
+            <h2>Notas relacionadas</h2>
+            <ul>
+              {relatedNotes.map((related) => (
+                <li><a href={`/notas/${related.id}/`}>{related.data.titulo}</a></li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </Container>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .note-header {
+    padding-block: clamp(4rem, 11vw, 8rem);
+    border-bottom: var(--border-thin);
+  }
+
+  .note-header h1 {
+    margin-bottom: var(--space-6);
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1;
+  }
+
+  .note-header__summary {
+    margin-bottom: var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .note-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+  }
+
+  .note-body {
+    padding-block: var(--space-section);
+  }
+
+  .prose {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+  }
+
+  .prose :global(h2),
+  .prose :global(h3) {
+    margin-block: var(--space-7) var(--space-4);
+    line-height: var(--leading-title);
+  }
+
+  .prose :global(h2) {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .prose :global(p),
+  .prose :global(li) {
+    color: var(--color-text-muted);
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol),
+  .prose :global(blockquote),
+  .prose :global(pre) {
+    margin-block: 0 var(--space-5);
+  }
+
+  .prose :global(blockquote) {
+    padding-left: var(--space-5);
+    border-left: 2px solid var(--color-accent);
+  }
+
+  .prose :global(pre) {
+    overflow-x: auto;
+    padding: var(--space-5);
+    border: var(--border-thin);
+    border-radius: var(--radius-small);
+    background: var(--color-surface-subtle);
+    font-size: var(--font-code);
+  }
+
+  .prose :global(:not(pre) > code) {
+    padding: 0.125em 0.3em;
+    border: var(--border-thin);
+    border-radius: var(--radius-small);
+    background: var(--color-surface-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .note-navigation {
+    padding-block: var(--space-7);
+    border-top: var(--border-thin);
+  }
+
+  .note-navigation a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    color: var(--color-text);
+    font-weight: 650;
+    text-decoration-color: var(--color-border-strong);
+  }
+
+  .related-notes {
+    margin-top: var(--space-7);
+    padding-top: var(--space-6);
+    border-top: var(--border-thin);
+  }
+
+  .related-notes h2 {
+    font-size: var(--font-subtitle);
+  }
+
+  .related-notes ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>
