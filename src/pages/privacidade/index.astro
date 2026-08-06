@@ -1,0 +1,63 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+import { siteConfig } from '../../config/site';
+
+const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent('Privacidade — WR Labs')}`;
+---
+
+<LegalLayout
+  title="Política de Privacidade"
+  eyebrow="Privacidade · MVP"
+  description="Como o site da WR Labs trata dados e serviços externos nesta versão."
+>
+  <section aria-labelledby="escopo-title">
+    <h2 id="escopo-title">Escopo atual</h2>
+    <p>
+      O site institucional da WR Labs apresenta produtos, cases, notas e
+      informações profissionais. Nesta versão, não oferece login, contas de
+      usuário, área autenticada ou formulário de contato.
+    </p>
+  </section>
+
+  <section aria-labelledby="dados-title">
+    <h2 id="dados-title">Dados pessoais</h2>
+    <p>
+      O site não possui backend ou banco de dados próprio para coletar e
+      armazenar dados de visitantes no MVP. Ao enviar um email, as informações
+      fornecidas são processadas pelo serviço de email para permitir a resposta
+      ao contato.
+    </p>
+    <p>
+      A infraestrutura de hospedagem pode manter registros técnicos necessários
+      para segurança, disponibilidade e funcionamento, conforme as políticas do
+      respectivo provedor.
+    </p>
+  </section>
+
+  <section aria-labelledby="cookies-title">
+    <h2 id="cookies-title">Cookies e métricas</h2>
+    <p>
+      A WR Labs não configura cookies de marketing nesta versão. Se ferramentas
+      de analytics ou novas formas de coleta forem adicionadas futuramente, esta
+      política deverá ser atualizada para explicar os dados envolvidos e sua
+      finalidade.
+    </p>
+  </section>
+
+  <section aria-labelledby="externos-title">
+    <h2 id="externos-title">Links externos</h2>
+    <p>
+      O site pode apontar para serviços externos, como lojas de aplicativos,
+      repositórios e redes profissionais. Ao acessar esses destinos, passam a
+      valer os termos e políticas dos respectivos serviços.
+    </p>
+  </section>
+
+  <section aria-labelledby="contato-privacidade-title">
+    <h2 id="contato-privacidade-title">Contato</h2>
+    <p>
+      Dúvidas sobre privacidade podem ser enviadas para
+      <a href={emailHref}>{siteConfig.email}</a>.
+    </p>
+  </section>
+</LegalLayout>

@@ -3,11 +3,18 @@ export const siteConfig = {
   title: 'WR Labs — Laboratório de produtos digitais',
   description: 'Laboratório de produtos digitais.',
   email: 'wrlabs.apps@gmail.com',
+  emailSubject: 'Contato pelo site da WR Labs',
   github: null as string | null,
   linkedin: null as string | null,
   domain: import.meta.env.PUBLIC_SITE_URL ?? null,
   language: 'pt-BR',
   author: 'Wilian',
+  tagline: 'Produtos digitais construídos com atenção.',
+  contact: {
+    title: 'Tem uma ideia, projeto ou oportunidade?',
+    description:
+      'A WR Labs está aberta a conversas sobre desenvolvimento, produtos digitais e oportunidades profissionais.',
+  },
   about: {
     title: 'Construindo produtos enquanto evoluo como desenvolvedor.',
     introduction:

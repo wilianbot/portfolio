@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import ButtonLink from '../components/ButtonLink.astro';
+import ContactCallout from '../components/ContactCallout.astro';
 import Container from '../components/Container.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import ProductLabMark from '../components/ProductLabMark.astro';
@@ -106,6 +107,8 @@ const labProducts = filterLabActivityProducts(products, 2);
       </div>
     </Container>
   </Section>
+
+  <ContactCallout />
 </BaseLayout>
 
 <style>

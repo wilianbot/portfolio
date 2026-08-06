@@ -1,12 +1,11 @@
 ---
 import Container from './Container.astro';
-import { siteConfig } from '../config/site';
 
 const navigation = [
   { label: 'Produtos', href: '/produtos/' },
   { label: 'Sobre', href: '/sobre/' },
   { label: 'Notas', href: '/notas/' },
-  { label: 'Contato', href: `mailto:${siteConfig.email}` },
+  { label: 'Contato', href: '/contato/' },
 ] as const;
 
 const currentPath = Astro.url.pathname;

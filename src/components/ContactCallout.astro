@@ -1,0 +1,101 @@
+---
+import ButtonLink from './ButtonLink.astro';
+import Container from './Container.astro';
+import Eyebrow from './Eyebrow.astro';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  headingAs?: 'h1' | 'h2';
+  id?: string;
+}
+
+const { headingAs: Heading = 'h2', id = 'contato-title' } = Astro.props;
+const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteConfig.emailSubject)}`;
+---
+
+<section class="contact-callout" aria-labelledby={id}>
+  <Container>
+    <Eyebrow>Contato</Eyebrow>
+    <div class="contact-callout__layout">
+      <div>
+        <Heading {id}>{siteConfig.contact.title}</Heading>
+        <p>{siteConfig.contact.description}</p>
+      </div>
+
+      <div class="contact-callout__actions" aria-label="Canais de contato">
+        <ButtonLink href={emailHref}>Enviar email</ButtonLink>
+        {siteConfig.linkedin && (
+          <ButtonLink
+            href={siteConfig.linkedin}
+            variant="secondary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Abrir LinkedIn
+          </ButtonLink>
+        )}
+        {siteConfig.github && (
+          <ButtonLink
+            href={siteConfig.github}
+            variant="secondary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Abrir GitHub
+          </ButtonLink>
+        )}
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .contact-callout {
+    padding-block: var(--space-section);
+    border-bottom: var(--border-thin);
+    background: var(--color-accent-soft);
+  }
+
+  .contact-callout__layout {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  h1,
+  h2 {
+    max-width: 14ch;
+    margin-bottom: var(--space-5);
+    font-size: clamp(2.5rem, 7vw, 5.25rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 0.98;
+  }
+
+  p {
+    max-width: var(--width-reading);
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .contact-callout__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 56rem) {
+    .contact-callout__layout {
+      grid-template-columns: minmax(0, 1.25fr) minmax(17rem, 0.55fr);
+      align-items: end;
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+  }
+
+  @media (max-width: 35rem) {
+    .contact-callout__actions > :global(a) {
+      width: 100%;
+    }
+  }
+</style>

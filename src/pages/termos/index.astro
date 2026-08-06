@@ -1,0 +1,56 @@
+---
+import LegalLayout from '../../layouts/LegalLayout.astro';
+import { siteConfig } from '../../config/site';
+
+const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent('Termos de uso — WR Labs')}`;
+---
+
+<LegalLayout
+  title="Termos de Uso"
+  eyebrow="Termos · Site institucional"
+  description="Condições simples para utilização do site público da WR Labs."
+>
+  <section aria-labelledby="uso-title">
+    <h2 id="uso-title">Uso do site</h2>
+    <p>
+      O conteúdo deste site tem finalidade institucional, profissional e
+      informativa. Ele pode ser consultado sem cadastro, login ou pagamento.
+    </p>
+  </section>
+
+  <section aria-labelledby="conteudo-title">
+    <h2 id="conteudo-title">Conteúdo e disponibilidade</h2>
+    <p>
+      Informações sobre produtos refletem apenas o que está confirmado e podem
+      ser atualizadas conforme os projetos evoluem. A presença de um produto no
+      portfólio não significa que ele esteja publicado ou disponível ao público.
+    </p>
+  </section>
+
+  <section aria-labelledby="propriedade-title">
+    <h2 id="propriedade-title">Autoria e propriedade</h2>
+    <p>
+      Textos e elementos próprios da WR Labs não devem ser reutilizados de forma
+      que sugira autoria, parceria ou endosso inexistentes. Cases desenvolvidos
+      em contextos compartilhados preservam os créditos e limites de
+      responsabilidade informados em suas páginas.
+    </p>
+  </section>
+
+  <section aria-labelledby="links-title">
+    <h2 id="links-title">Serviços externos</h2>
+    <p>
+      Links externos são fornecidos como conveniência. A disponibilidade, o
+      conteúdo e as práticas desses serviços são responsabilidade de seus
+      respectivos operadores.
+    </p>
+  </section>
+
+  <section aria-labelledby="alteracoes-title">
+    <h2 id="alteracoes-title">Alterações e contato</h2>
+    <p>
+      Estes termos podem ser ajustados quando o site ou seus recursos mudarem.
+      Dúvidas podem ser enviadas para <a href={emailHref}>{siteConfig.email}</a>.
+    </p>
+  </section>
+</LegalLayout>

@@ -1,0 +1,166 @@
+---
+import Container from './Container.astro';
+import { siteConfig } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteConfig.emailSubject)}`;
+const primaryLinks = [
+  { label: 'Produtos', href: '/produtos/' },
+  { label: 'Sobre', href: '/sobre/' },
+  { label: 'Notas', href: '/notas/' },
+  { label: 'Contato', href: '/contato/' },
+] as const;
+const legalLinks = [
+  { label: 'Política de Privacidade', href: '/privacidade/' },
+  { label: 'Termos de Uso', href: '/termos/' },
+] as const;
+const contactLinks = [
+  siteConfig.github
+    ? { label: 'GitHub', href: siteConfig.github, external: true }
+    : null,
+  siteConfig.linkedin
+    ? { label: 'LinkedIn', href: siteConfig.linkedin, external: true }
+    : null,
+  { label: siteConfig.email, href: emailHref, external: false },
+].filter((link) => link !== null);
+---
+
+<footer class="site-footer">
+  <Container>
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <a href="/" aria-label="WR Labs — Página inicial">WR <span>Labs</span></a>
+        <p>{siteConfig.tagline}</p>
+      </div>
+
+      <div class="site-footer__navigation">
+        <nav aria-label="Navegação do rodapé">
+          <p>Explorar</p>
+          <ul>
+            {primaryLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+          </ul>
+        </nav>
+
+        <nav aria-label="Informações legais">
+          <p>Legal</p>
+          <ul>
+            {legalLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+          </ul>
+        </nav>
+
+        <nav aria-label="Perfis e contato">
+          <p>Contato</p>
+          <ul>
+            {contactLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target={link.external ? '_blank' : undefined}
+                  rel={link.external ? 'noreferrer' : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>© {currentYear} {siteConfig.name}</p>
+      <p>Construído com Astro e conteúdo estático.</p>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-8) var(--space-5);
+    background: var(--color-text);
+    color: var(--color-background);
+  }
+
+  .site-footer__top {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .site-footer__brand > a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    color: inherit;
+    font-size: var(--font-subtitle);
+    font-weight: 750;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+  }
+
+  .site-footer__brand > a span {
+    font-size: var(--font-caption);
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .site-footer__brand > p {
+    max-width: 18rem;
+    margin: var(--space-3) 0 0;
+    color: color-mix(in srgb, var(--color-background) 72%, transparent);
+  }
+
+  .site-footer__navigation {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--space-7);
+  }
+
+  nav > p {
+    margin-bottom: var(--space-3);
+    color: color-mix(in srgb, var(--color-background) 62%, transparent);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    color: var(--color-background);
+    font-size: var(--font-caption);
+    text-decoration-color: color-mix(in srgb, var(--color-background) 45%, transparent);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-6);
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid color-mix(in srgb, var(--color-background) 20%, transparent);
+    color: color-mix(in srgb, var(--color-background) 62%, transparent);
+    font-size: var(--font-label);
+  }
+
+  .site-footer__bottom p {
+    margin: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__top {
+      grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.25fr);
+    }
+  }
+</style>

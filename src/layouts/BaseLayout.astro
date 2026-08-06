@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from '../config/site';
 import SkipLink from '../components/SkipLink.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -8,6 +9,7 @@ const {
   title = siteConfig.title,
   description = siteConfig.description,
   noindex = false,
+  hideFooter = false,
 } = Astro.props;
 ---
 
@@ -29,5 +31,6 @@ const {
     <main id="conteudo" tabindex="-1">
       <slot />
     </main>
+    {!hideFooter && <SiteFooter />}
   </body>
 </html>
