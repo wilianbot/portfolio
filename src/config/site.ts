@@ -10,6 +10,8 @@ export const siteConfig = {
   language: 'pt-BR',
   author: 'Wilian',
   tagline: 'Produtos digitais construídos com atenção.',
+  defaultOgImage: '/og/home.jpg',
+  manifest: '/manifest.webmanifest',
   contact: {
     title: 'Tem uma ideia, projeto ou oportunidade?',
     description:

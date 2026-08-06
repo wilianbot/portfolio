@@ -32,11 +32,37 @@ const { note, relatedNotes } = Astro.props;
 const { Content } = await render(note);
 const publishedAt = formatNoteDate(note.data.data);
 const updatedAt = formatNoteDate(note.data.atualizacao);
+const articleStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: note.data.titulo,
+  description: note.data.resumo,
+  datePublished: note.data.data?.toISOString(),
+  ...(note.data.atualizacao
+    ? { dateModified: note.data.atualizacao.toISOString() }
+    : {}),
+  author: {
+    '@type': 'Person',
+    name: 'Wilian',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'WR Labs',
+  },
+  inLanguage: 'pt-BR',
+};
 ---
 
 <BaseLayout
   title={note.data.seoTitle ?? `${note.data.titulo} — Notas — WR Labs`}
   description={note.data.seoDescription ?? note.data.resumo}
+  ogType="article"
+  ogImage="/og/notes.jpg"
+  ogImageAlt={`WR Labs — ${note.data.titulo}`}
+  publishedTime={note.data.data}
+  modifiedTime={note.data.atualizacao}
+  breadcrumbLabel={note.data.titulo}
+  structuredData={articleStructuredData}
 >
   <SiteHeader />
 

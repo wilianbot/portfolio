@@ -53,11 +53,34 @@ const seoDescription =
   data.seoDescription ??
   data.descricaoCurta ??
   `Case study de ${data.nome} na WR Labs.`;
+const canDescribeAsSoftware =
+  data.plataforma?.length &&
+  (data.descricaoCurta || data.resumoCompleto) &&
+  data.status !== 'privado' &&
+  data.status !== 'conceito';
+const productStructuredData = canDescribeAsSoftware
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: data.nome,
+      description: data.descricaoCurta ?? data.resumoCompleto,
+      operatingSystem: data.plataforma?.join(', '),
+      ...(data.categoria ? { applicationCategory: data.categoria } : {}),
+      ...(data.urlPublica ? { url: data.urlPublica } : {}),
+      ...(data.ultimaAtualizacao
+        ? { dateModified: data.ultimaAtualizacao.toISOString() }
+        : {}),
+    }
+  : [];
 ---
 
 <BaseLayout
   title={data.seoTitle ?? `${data.nome} — Produtos — WR Labs`}
   description={seoDescription}
+  ogImage={`/og/products/${data.slug}.jpg`}
+  ogImageAlt={`WR Labs — ${data.nome}`}
+  breadcrumbLabel={data.nome}
+  structuredData={productStructuredData}
 >
   <SiteHeader />
 

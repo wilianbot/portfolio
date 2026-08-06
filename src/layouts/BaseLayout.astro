@@ -5,12 +5,154 @@ import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
+type JsonLd = Record<string, unknown>;
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  hideFooter?: boolean;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  structuredData?: JsonLd | JsonLd[];
+  breadcrumbLabel?: string;
+}
+
 const {
   title = siteConfig.title,
   description = siteConfig.description,
   noindex = false,
   hideFooter = false,
-} = Astro.props;
+  ogImage,
+  ogImageAlt = title,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  structuredData = [],
+  breadcrumbLabel,
+}: Props = Astro.props;
+
+const path = Astro.url.pathname;
+const baseUrl = siteConfig.domain;
+const canonicalUrl = baseUrl
+  ? new URL(path, baseUrl).toString()
+  : undefined;
+
+const routeOgImages: Record<string, string> = {
+  '/': '/og/home.jpg',
+  '/produtos/': '/og/products.jpg',
+  '/sobre/': '/og/about.jpg',
+  '/notas/': '/og/notes.jpg',
+  '/contato/': '/og/contact.jpg',
+  '/privacidade/': '/og/privacy.jpg',
+  '/termos/': '/og/terms.jpg',
+};
+const selectedOgImage =
+  ogImage ?? routeOgImages[path] ?? siteConfig.defaultOgImage;
+const absoluteOgImage = baseUrl
+  ? new URL(selectedOgImage, baseUrl).toString()
+  : selectedOgImage;
+
+const profileUrls = [siteConfig.github, siteConfig.linkedin].filter(
+  (url): url is string => url !== null,
+);
+const defaultPageData: JsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  ...(canonicalUrl ? { url: canonicalUrl } : {}),
+  isPartOf: {
+    '@type': 'WebSite',
+    name: siteConfig.name,
+    ...(baseUrl ? { url: baseUrl } : {}),
+  },
+};
+
+const routeSegments = path.split('/').filter(Boolean);
+const sectionLabels: Record<string, string> = {
+  produtos: 'Produtos',
+  sobre: 'Sobre',
+  notas: 'Notas',
+  contato: 'Contato',
+  privacidade: 'Política de Privacidade',
+  termos: 'Termos de Uso',
+};
+const breadcrumbData: JsonLd | null =
+  baseUrl && routeSegments.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Início',
+            item: new URL('/', baseUrl).toString(),
+          },
+          ...routeSegments.map((segment, index) => {
+            const itemPath = `/${routeSegments.slice(0, index + 1).join('/')}/`;
+            const isLast = index === routeSegments.length - 1;
+            return {
+              '@type': 'ListItem',
+              position: index + 2,
+              name: isLast
+                ? (breadcrumbLabel ?? sectionLabels[segment] ?? segment.replaceAll('-', ' '))
+                : (sectionLabels[segment] ?? segment.replaceAll('-', ' ')),
+              item: new URL(itemPath, baseUrl).toString(),
+            };
+          }),
+        ],
+      }
+    : null;
+
+const homeData: JsonLd[] =
+  path === '/'
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: siteConfig.name,
+          email: siteConfig.email,
+          ...(baseUrl
+            ? {
+                url: baseUrl,
+                logo: new URL('/icon.svg', baseUrl).toString(),
+              }
+            : {}),
+          ...(profileUrls.length ? { sameAs: profileUrls } : {}),
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: siteConfig.author,
+          email: siteConfig.email,
+          ...(profileUrls.length ? { sameAs: profileUrls } : {}),
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: siteConfig.name,
+          description: siteConfig.description,
+          inLanguage: siteConfig.language,
+          ...(baseUrl ? { url: baseUrl } : {}),
+        },
+      ]
+    : [];
+
+const suppliedData = Array.isArray(structuredData)
+  ? structuredData
+  : [structuredData];
+const jsonLdEntries = [
+  defaultPageData,
+  ...homeData,
+  ...(breadcrumbData ? [breadcrumbData] : []),
+  ...suppliedData,
+];
+const serializedJsonLd = JSON.stringify(jsonLdEntries).replaceAll('<', '\\u003c');
 ---
 
 <!doctype html>
@@ -22,8 +164,34 @@ const {
     <meta name="author" content={siteConfig.author} />
     <meta name="generator" content={Astro.generator} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {canonicalUrl && !noindex && <link rel="canonical" href={canonicalUrl} />}
     <meta name="theme-color" content="#f7f5f2" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {ogType === 'article' && publishedTime && (
+      <meta property="article:published_time" content={publishedTime.toISOString()} />
+    )}
+    {ogType === 'article' && modifiedTime && (
+      <meta property="article:modified_time" content={modifiedTime.toISOString()} />
+    )}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href={siteConfig.manifest} />
+    <script is:inline type="application/ld+json" set:html={serializedJsonLd}></script>
     <title>{title}</title>
   </head>
   <body>

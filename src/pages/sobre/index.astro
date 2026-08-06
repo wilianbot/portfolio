@@ -16,11 +16,22 @@ const profileLinks = [
     : null,
   { label: 'Contato', href: `mailto:${siteConfig.email}`, external: false },
 ].filter((link) => link !== null);
+const personStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.author,
+  description: about.introduction,
+  email: siteConfig.email,
+  sameAs: [siteConfig.github, siteConfig.linkedin].filter(
+    (url): url is string => url !== null,
+  ),
+};
 ---
 
 <BaseLayout
   title="Sobre — WR Labs"
   description="Sobre Wilian, sua jornada em desenvolvimento de software e a criação da WR Labs."
+  structuredData={personStructuredData}
 >
   <SiteHeader />
 

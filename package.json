@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "generate:assets": "node scripts/generate-publication-assets.mjs",
     "preview": "astro preview",
     "test:content": "node --experimental-strip-types --test tests/content/*.test.ts",
+    "validate:metadata": "node scripts/validate-metadata.mjs",
     "typecheck": "astro check",
     "lint": "eslint ."
   },
@@ -21,6 +23,7 @@
     "eslint-plugin-astro": "1.7.0",
     "prettier": "latest",
     "prettier-plugin-astro": "latest",
+    "sharp": "^0.35.3",
     "typescript": "latest",
     "typescript-eslint": "^8.66.0"
   }
