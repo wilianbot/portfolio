@@ -2,7 +2,57 @@
   "slug": "observatorio-legislativo",
   "nome": "Observatório Legislativo",
   "categoria": "Experiência de estágio",
-  "contexto": "Experiência desenvolvida durante um estágio.",
-  "creditos": "Este case não atribui propriedade integral do produto. Responsabilidades individuais, equipe e instituição serão detalhadas somente após confirmação.",
+  "descricaoCurta": "Plataforma para integração, processamento e visualização de dados públicos desenvolvida no contexto de estágio.",
+  "resumoCompleto": "Participação no desenvolvimento e na evolução de uma plataforma web voltada à integração, persistência, processamento e visualização de dados provenientes de APIs e documentos públicos.",
+  "contexto": "Trabalho desenvolvido no LTS — Laboratório de Tecnologias em Software durante o estágio de desenvolvimento de software, entre maio de 2024 e junho de 2025.",
+  "proposta": "Evoluir uma solução inicialmente criada como aplicação desktop em Python para uma plataforma web capaz de integrar, processar e apresentar dados públicos.",
+  "responsabilidades": [
+    "Desenvolvimento do backend com Django e Django REST Framework.",
+    "Desenvolvimento do frontend com Next.js, React e TypeScript.",
+    "Integração e persistência de dados provenientes de APIs e documentos públicos.",
+    "Automação de tarefas, processamento de dados e validação de APIs.",
+    "Participação em decisões relacionadas à migração, arquitetura, integração e experiência do usuário."
+  ],
+  "creditos": "Case de uma experiência desenvolvida em equipe no contexto do estágio no LTS. A participação de Wilian não representa propriedade integral do produto.",
+  "anoInicio": 2024,
+  "plataforma": ["Web"],
+  "tecnologiasPrincipais": [
+    "Python",
+    "Django",
+    "Django REST Framework",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "PostgreSQL",
+    "Docker",
+    "Redis",
+    "Celery",
+    "Tailwind CSS",
+    "ShadCN"
+  ],
+  "problemasResolvidos": [
+    "Integração e persistência de dados provenientes de diferentes APIs e documentos públicos.",
+    "Migração de uma solução desktop em Python para uma experiência web."
+  ],
+  "funcionalidades": [
+    "Integração e persistência de dados públicos.",
+    "Automação de tarefas e processamento de dados.",
+    "Visualização de informações em uma plataforma web."
+  ],
+  "decisoesTecnicas": [
+    "Migração gradual da aplicação desktop para uma arquitetura web.",
+    "Containerização da aplicação com Docker.",
+    "Uso de Redis e Celery no processamento de tarefas."
+  ],
+  "arquitetura": "Plataforma web com backend em Django e Django REST Framework, frontend em Next.js e React e persistência em PostgreSQL.",
+  "armazenamento": "PostgreSQL como banco de dados relacional e Redis no suporte ao processamento de tarefas.",
+  "desafios": [
+    "Migrar uma solução desktop para uma plataforma web.",
+    "Integrar e processar dados provenientes de APIs e documentos públicos."
+  ],
+  "solucoesAdotadas": [
+    "Separação entre backend com API REST e frontend web.",
+    "Containerização do ambiente e automação de tarefas de processamento."
+  ],
   "ordem": 5
 }

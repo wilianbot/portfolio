@@ -17,6 +17,7 @@ import {
   sortProducts,
   validateProductCollection,
 } from '../lib/products';
+import { profile } from '../data/profile';
 
 const products = sortProducts(await getCollection('products'));
 validateProductCollection(products);
@@ -29,19 +30,15 @@ const labProducts = filterLabActivityProducts(products, 2);
     <Container>
       <div class="hero__grid">
         <div class="hero__content">
-          <Eyebrow>WR Labs — Produtos digitais</Eyebrow>
+          <Eyebrow>WR Labs — Produtos e Engenharia de Software</Eyebrow>
           <h1 id="hero-title">
-            <span class="hero__title-line">Transformo ideias em</span>
-            <span class="hero__title-line hero__title-line--accent">produtos digitais</span>
-            <span class="hero__title-line">simples e úteis.</span>
+            <span class="hero__title-line">Construindo <span class="hero__title-accent">produtos digitais</span></span>
+            <span class="hero__title-line">e sistemas para problemas reais.</span>
           </h1>
-          <p class="hero__description">
-            Na WR Labs, cada projeto é criado para resolver problemas reais,
-            explorar novas ideias e transformar aprendizado em produtos.
-          </p>
+          <p class="hero__description">{profile.homeDescription}</p>
           <div class="hero__actions" role="group" aria-label="Ações principais">
-            <ButtonLink href="#produtos">Ver produtos</ButtonLink>
-            <ButtonLink href="/sobre/" variant="secondary">Conhecer minha jornada</ButtonLink>
+            <ButtonLink href="#produtos">Conhecer os produtos</ButtonLink>
+            <ButtonLink href="/sobre/" variant="secondary">Sobre minha jornada</ButtonLink>
           </div>
         </div>
         <div class="hero__visual"><ProductLabMark /></div>
@@ -107,7 +104,7 @@ const labProducts = filterLabActivityProducts(products, 2);
   .hero__grid { display: grid; align-items: center; gap: var(--space-7); }
   h1 { max-width: 18ch; margin-bottom: var(--space-5); font-size: var(--font-display); font-weight: 740; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
   .hero__title-line { display: block; }
-  .hero__title-line--accent { color: var(--primary); }
+  .hero__title-accent { color: var(--primary); }
   .hero__description { max-width: 38rem; margin-bottom: var(--space-6); color: var(--text-secondary); font-size: clamp(1.05rem, 2vw, 1.2rem); }
   .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
   .focus-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: clamp(2.5rem, 6vw, 4.5rem); padding-top: var(--space-5); border-top: var(--border-thin); font-size: var(--font-caption); }

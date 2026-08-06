@@ -9,7 +9,7 @@ A WR Labs é um laboratório de produtos digitais de Wilian. O site instituciona
 - Nome: WR Labs
 - Contato: `wrlabs.apps@gmail.com`
 - Idioma inicial: Português do Brasil
-- Autor: Wilian
+- Autor: Wilian Robal dos Santos
 
 ## Direção
 

@@ -1,88 +1,92 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
+import Tag from '../../components/Tag.astro';
 import TextLink from '../../components/TextLink.astro';
 import { siteConfig } from '../../config/site';
+import { education } from '../../data/education';
+import { professionalExperiences } from '../../data/experience';
+import { currentFocus } from '../../data/now';
+import { profile } from '../../data/profile';
+import { skillGroups } from '../../data/skills';
+import { filterLabActivityProducts } from '../../lib/products';
 
-const { about } = siteConfig;
+const activeProducts = filterLabActivityProducts(await getCollection('products'), 2);
 const profileLinks = [
-  siteConfig.github
-    ? { label: 'GitHub', href: siteConfig.github, external: true }
-    : null,
-  siteConfig.linkedin
-    ? { label: 'LinkedIn', href: siteConfig.linkedin, external: true }
-    : null,
-  { label: 'Contato', href: `mailto:${siteConfig.email}`, external: false },
+  siteConfig.github ? { label: 'GitHub', href: siteConfig.github, external: true } : null,
+  siteConfig.linkedin ? { label: 'LinkedIn', href: siteConfig.linkedin, external: true } : null,
+  { label: 'Email', href: `mailto:${siteConfig.email}`, external: false },
 ].filter((link) => link !== null);
 const personStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: siteConfig.author,
-  description: about.introduction,
-  email: siteConfig.email,
-  sameAs: [siteConfig.github, siteConfig.linkedin].filter(
-    (url): url is string => url !== null,
-  ),
+  name: profile.fullName,
+  alternateName: profile.displayName,
+  jobTitle: profile.professionalTitle,
+  description: profile.subtitle,
+  email: profile.email,
+  homeLocation: { '@type': 'Place', name: profile.location },
+  sameAs: [siteConfig.github, siteConfig.linkedin].filter((url): url is string => url !== null),
 };
 ---
 
 <BaseLayout
-  title="Sobre — WR Labs"
-  description="Sobre Wilian, sua jornada em desenvolvimento de software e a criação da WR Labs."
+  title={`Sobre ${profile.displayName} — ${profile.professionalTitle} | WR Labs`}
+  description={`Sobre ${profile.displayName}, sua experiência profissional, formação e trabalho com produtos digitais.`}
   structuredData={personStructuredData}
 >
   <header class="about-hero">
     <Container>
-      <Eyebrow>Sobre · Wilian</Eyebrow>
-      <h1>{about.title}</h1>
-      <p>{about.introduction}</p>
+      <Eyebrow>Sobre · {profile.displayName}</Eyebrow>
+      <h1>{profile.subtitle}</h1>
+      <div class="about-introduction">
+        {profile.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
     </Container>
   </header>
 
   <section class="about-section" aria-labelledby="interesses-title">
     <Container>
       <div class="section-layout">
-        <div>
-          <Eyebrow>Prática</Eyebrow>
-          <h2 id="interesses-title">O que orienta meu trabalho.</h2>
-        </div>
-
+        <div><Eyebrow>Prática</Eyebrow><h2 id="interesses-title">O que gosto de construir.</h2></div>
         <ul class="interest-list">
-          {about.interests.map((interest, index) => (
-            <li>
-              <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-              <div>
-                <h3>{interest.title}</h3>
-                <p>{interest.description}</p>
-              </div>
-            </li>
+          {profile.buildingInterests.map((interest, index) => (
+            <li><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><div><h3>{interest.title}</h3><p>{interest.description}</p></div></li>
           ))}
         </ul>
       </div>
     </Container>
   </section>
 
-  <section class="about-section about-section--subtle" aria-labelledby="jornada-title">
+  <section class="about-section about-section--subtle" aria-labelledby="experiencia-title">
     <Container>
       <div class="section-layout">
         <div>
-          <Eyebrow>Percurso</Eyebrow>
-          <h2 id="jornada-title">Jornada em construção.</h2>
-          <p class="section-note">
-            Uma trajetória que conecta organização, software e criação de
-            produtos — sem atalhos ou títulos inflados.
-          </p>
+          <Eyebrow>Trajetória</Eyebrow>
+          <h2 id="experiencia-title">Experiência profissional.</h2>
+          <p class="section-note">Do trabalho administrativo ao desenvolvimento full stack de sistemas e produtos.</p>
         </div>
-
-        <ol class="timeline">
-          {about.journey.map((event) => (
-            <li>
-              <span class="timeline__mark" aria-hidden="true"></span>
-              <div>
-                <h3>{event.title}</h3>
-                <p>{event.description}</p>
-              </div>
+        <ol class="experience-list">
+          {professionalExperiences.map((experience) => (
+            <li class:list={[experience.emphasis === 'supporting' && 'experience--supporting']}>
+              <article>
+                <header>
+                  <div><p class="experience-company">{experience.company}</p><h3>{experience.role}</h3></div>
+                  <div class="experience-meta"><span>{experience.period}</span>{experience.location && <span>{experience.location}</span>}</div>
+                </header>
+                <p class="experience-summary">{experience.summary}</p>
+                <ul class="experience-details">{experience.details.map((detail) => <li>{detail}</li>)}</ul>
+                {experience.technologies?.length && (
+                  <ul class="tag-list" aria-label={`Tecnologias utilizadas na ${experience.company}`}>
+                    {experience.technologies.map((technology) => <li><Tag>{technology}</Tag></li>)}
+                  </ul>
+                )}
+                {experience.relatedProductSlug && (
+                  <TextLink href={`/produtos/${experience.relatedProductSlug}/`} arrow="right">Ver case relacionado</TextLink>
+                )}
+              </article>
             </li>
           ))}
         </ol>
@@ -90,225 +94,112 @@ const personStructuredData = {
     </Container>
   </section>
 
-  <section class="about-section" aria-labelledby="tecnologias-title">
+  <section class="about-section" aria-labelledby="formacao-title">
     <Container>
       <div class="section-layout">
-        <div>
-          <Eyebrow>Repertório</Eyebrow>
-          <h2 id="tecnologias-title">Tecnologia como meio.</h2>
-          <p class="section-note">
-            Grupos que organizam a prática, sem porcentagens ou níveis
-            artificiais.
-          </p>
+        <div><Eyebrow>Formação</Eyebrow><h2 id="formacao-title">Formação acadêmica.</h2></div>
+        <div class="education-stack">
+          <article class="education-card">
+            <p>{education.institution}</p><h3>{education.course}</h3>
+            <dl><div><dt>Período</dt><dd>{education.period}</dd></div><div><dt>Status</dt><dd>{education.status}</dd></div></dl>
+            {education.description && <p class="education-description">{education.description}</p>}
+          </article>
+          <div class="language-card">
+            <h3>Idiomas</h3>
+            <dl>{profile.languages.map((language) => <div><dt>{language.name}</dt><dd>{language.proficiency}</dd></div>)}</dl>
+          </div>
         </div>
+      </div>
+    </Container>
+  </section>
 
+  <section class="about-section about-section--subtle" aria-labelledby="tecnologias-title">
+    <Container>
+      <div class="section-layout">
+        <div><Eyebrow>Repertório</Eyebrow><h2 id="tecnologias-title">Tecnologias.</h2><p class="section-note">Ferramentas e práticas utilizadas em experiências profissionais, estudos e projetos.</p></div>
         <ul class="technology-list">
-          {about.technologyGroups.map((group) => (
-            <li>
-              <h3>{group.name}</h3>
-              <p>{group.description}</p>
-            </li>
+          {skillGroups.map((group) => (
+            <li><h3>{group.name}</h3><ul class="tag-list">{group.items.map((item) => <li><Tag>{item}</Tag></li>)}</ul></li>
           ))}
         </ul>
       </div>
     </Container>
   </section>
 
+  <section class="about-section" aria-labelledby="agora-title">
+    <Container>
+      <div class="section-layout">
+        <div><Eyebrow>Atualmente</Eyebrow><h2 id="agora-title">Agora.</h2><p class="section-note">Informações centralizadas e fáceis de atualizar conforme o trabalho e os estudos evoluem.</p></div>
+        <div class="now-grid">
+          <div><h3>Trabalhando</h3><p>{currentFocus.workingAt}</p></div>
+          <div><h3>Estudando</h3><ul>{currentFocus.studying.map((item) => <li>{item}</li>)}</ul></div>
+          {activeProducts.length > 0 && <div><h3>Construindo</h3><ul>{activeProducts.map((product) => <li><a href={`/produtos/${product.data.slug}/`}>{product.data.nome}</a></li>)}</ul></div>}
+          <div><h3>Interesses</h3><ul>{currentFocus.interests.map((item) => <li>{item}</li>)}</ul></div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
   <section class="contact-section" aria-labelledby="contato-title">
     <Container>
-      <Eyebrow>Conexões</Eyebrow>
+      <Eyebrow>Contato</Eyebrow>
       <div class="contact-section__layout">
-        <h2 id="contato-title">Vamos conversar.</h2>
-        <nav aria-label="Links de contato">
-          {profileLinks.map((link) => (
-            <TextLink href={link.href} arrow={link.external ? 'up-right' : 'right'}>
-              {link.label}
-            </TextLink>
-          ))}
-        </nav>
+        <div><h2 id="contato-title">Vamos conversar.</h2><p>Conversas sobre desenvolvimento, produtos digitais e oportunidades profissionais.</p></div>
+        <nav aria-label="Links de contato">{profileLinks.map((link) => <TextLink href={link.href} arrow={link.external ? 'up-right' : 'right'}>{link.label}</TextLink>)}</nav>
       </div>
     </Container>
   </section>
 </BaseLayout>
 
 <style>
-  .about-hero {
-    padding-block: clamp(3.5rem, 8vw, 6.5rem);
-    background: linear-gradient(145deg, var(--background), var(--primary-soft));
-  }
-
-  .about-hero h1 {
-    max-width: 15ch;
-    margin-bottom: var(--space-6);
-    font-size: var(--font-display);
-    font-weight: 720;
-    letter-spacing: var(--tracking-tight);
-    line-height: 0.98;
-  }
-
-  .about-hero > :global(.container) > p {
-    max-width: var(--width-reading);
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: var(--font-subtitle);
-  }
-
-  .about-section,
-  .contact-section {
-    padding-block: var(--space-section);
-  }
-
-  .about-section--subtle {
-    background: var(--color-surface-subtle);
-  }
-
-  .section-layout {
-    display: grid;
-    gap: var(--space-7);
-  }
-
-  h2 {
-    max-width: 12ch;
-    margin-bottom: var(--space-5);
-    font-size: var(--font-title);
-    font-weight: 650;
-    letter-spacing: var(--tracking-tight);
-    line-height: var(--leading-title);
-  }
-
-  .section-note {
-    max-width: 24rem;
-    color: var(--color-text-muted);
-  }
-
-  .interest-list,
-  .technology-list,
-  .timeline {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .interest-list li {
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    gap: var(--space-4);
-    margin-bottom: var(--space-3);
-    padding: var(--space-5);
-    border: var(--border-thin);
-    border-radius: var(--radius-medium);
-    background: var(--surface);
-    box-shadow: var(--shadow-small);
-  }
-
-  .interest-list > li > span {
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: var(--font-label);
-  }
-
-  h3 {
-    margin-bottom: var(--space-2);
-    font-size: var(--font-body);
-  }
-
-  .interest-list p,
-  .technology-list p,
-  .timeline p {
-    max-width: 34rem;
-    margin: 0;
-    color: var(--color-text-muted);
-  }
-
-  .timeline {
-    position: relative;
-  }
-
-  .timeline::before {
-    position: absolute;
-    top: var(--space-3);
-    bottom: var(--space-3);
-    left: 0.3125rem;
-    width: 1px;
-    background: var(--color-border-strong);
-    content: '';
-  }
-
-  .timeline li {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1.5rem 1fr;
-    gap: var(--space-4);
-    padding-bottom: var(--space-7);
-  }
-
-  .timeline li:last-child {
-    padding-bottom: 0;
-  }
-
-  .timeline__mark {
-    position: relative;
-    z-index: 1;
-    width: 0.6875rem;
-    height: 0.6875rem;
-    margin-top: 0.4rem;
-    border: 0.1875rem solid var(--color-surface-subtle);
-    border-radius: 50%;
-    background: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-accent);
-  }
-
-  .technology-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-    gap: var(--space-3);
-  }
-
-  .technology-list li {
-    min-height: 9rem;
-    padding: var(--space-5);
-    border: var(--border-thin);
-    border-radius: var(--radius-medium);
-    background: var(--surface);
-    box-shadow: var(--shadow-small);
-  }
-
-  .contact-section {
-    background: var(--color-text);
-    color: var(--color-background);
-  }
-
-  .contact-section :global(.eyebrow) {
-    color: var(--color-background);
-  }
-
-  .contact-section__layout {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: end;
-    justify-content: space-between;
-    gap: var(--space-6);
-  }
-
-  .contact-section h2 {
-    margin: 0;
-  }
-
-  .contact-section nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-5);
-  }
-
-  .contact-section nav :global(a) {
-    color: var(--color-background);
-    text-decoration-color: currentColor;
-  }
-
-  @media (min-width: 48rem) {
-    .section-layout {
-      grid-template-columns: minmax(13rem, 0.6fr) minmax(0, 1fr);
-      gap: clamp(3rem, 8vw, 8rem);
-    }
-  }
+  .about-hero { padding-block: clamp(3.5rem, 8vw, 6.5rem); background: linear-gradient(145deg, var(--background), var(--primary-soft)); }
+  .about-hero h1 { max-width: 17ch; margin-bottom: var(--space-6); font-size: var(--font-display); font-weight: 720; letter-spacing: var(--tracking-tight); line-height: 0.98; }
+  .about-introduction { max-width: var(--width-reading); }
+  .about-introduction p { color: var(--color-text-muted); font-size: var(--font-subtitle); }
+  .about-introduction p:last-child { margin-bottom: 0; }
+  .about-section, .contact-section { padding-block: var(--space-section); }
+  .about-section--subtle { background: var(--color-surface-subtle); }
+  .section-layout { display: grid; gap: var(--space-7); }
+  h2 { max-width: 13ch; margin-bottom: var(--space-5); font-size: var(--font-title); font-weight: 650; letter-spacing: var(--tracking-tight); line-height: var(--leading-title); }
+  h3 { margin-bottom: var(--space-2); font-size: 1.1rem; }
+  .section-note { max-width: 25rem; color: var(--color-text-muted); }
+  .interest-list, .experience-list, .technology-list, .tag-list { margin: 0; padding: 0; list-style: none; }
+  .interest-list li { display: grid; grid-template-columns: 2rem 1fr; gap: var(--space-4); margin-bottom: var(--space-3); padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .interest-list > li > span { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--font-label); }
+  .interest-list p { max-width: 34rem; margin: 0; color: var(--color-text-muted); }
+  .experience-list { display: grid; gap: var(--space-4); }
+  .experience-list article { padding: clamp(1.25rem, 3vw, 2rem); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .experience--supporting article { box-shadow: none; }
+  .experience-list header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-5); }
+  .experience-company { margin-bottom: var(--space-1); color: var(--color-accent); font-size: var(--font-caption); font-weight: 700; }
+  .experience-meta { display: flex; align-items: flex-end; flex-direction: column; color: var(--color-text-muted); font-size: var(--font-caption); }
+  .experience-summary { max-width: 38rem; margin-block: var(--space-4); color: var(--color-text-muted); }
+  .experience-details { margin: 0 0 var(--space-5); padding-left: 1.25rem; color: var(--color-text-muted); }
+  .experience-details li + li { margin-top: var(--space-2); }
+  .tag-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .experience-list :global(.text-link) { margin-top: var(--space-4); }
+  .education-stack { display: grid; gap: var(--space-4); }
+  .education-card, .language-card, .now-grid > div { padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .education-card > p:first-child { margin-bottom: var(--space-2); color: var(--color-accent); font-size: var(--font-caption); font-weight: 700; }
+  .education-card dl, .language-card dl { display: grid; gap: var(--space-3); margin: var(--space-5) 0 0; }
+  .education-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .education-card dt, .language-card dt { color: var(--color-text-muted); font-size: var(--font-label); font-weight: 700; text-transform: uppercase; }
+  .education-card dd, .language-card dd { margin: var(--space-1) 0 0; }
+  .education-description { margin: var(--space-5) 0 0; color: var(--color-text-muted); }
+  .technology-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--space-3); }
+  .technology-list > li { min-height: 10rem; padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .technology-list h3 { margin-bottom: var(--space-4); }
+  .now-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--space-3); }
+  .now-grid p, .now-grid ul { margin: 0; color: var(--color-text-muted); }
+  .now-grid ul { padding-left: 1.1rem; }
+  .now-grid a { color: var(--color-text); }
+  .contact-section { background: var(--color-text); color: var(--color-background); }
+  .contact-section :global(.eyebrow) { color: var(--color-background); }
+  .contact-section__layout { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-6); }
+  .contact-section h2 { margin-bottom: var(--space-2); color: var(--color-background); }
+  .contact-section p { max-width: 32rem; margin: 0; color: var(--dark-muted); }
+  .contact-section nav { display: flex; flex-wrap: wrap; gap: var(--space-5); }
+  .contact-section nav :global(a) { color: var(--color-background); text-decoration-color: currentColor; }
+  @media (min-width: 48rem) { .section-layout { grid-template-columns: minmax(13rem, 0.55fr) minmax(0, 1.15fr); gap: clamp(3rem, 7vw, 7rem); } }
+  @media (max-width: 35rem) { .experience-meta { align-items: flex-start; } .education-card dl { grid-template-columns: 1fr; } }
 </style>

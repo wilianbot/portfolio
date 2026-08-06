@@ -126,13 +126,18 @@ const homeData: JsonLd[] =
                 logo: new URL('/icon.svg', baseUrl).toString(),
               }
             : {}),
-          ...(profileUrls.length ? { sameAs: profileUrls } : {}),
         },
         {
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: siteConfig.author,
           email: siteConfig.email,
+          jobTitle: siteConfig.professionalTitle,
+          description: siteConfig.description,
+          homeLocation: {
+            '@type': 'Place',
+            name: siteConfig.location,
+          },
           ...(profileUrls.length ? { sameAs: profileUrls } : {}),
         },
         {
