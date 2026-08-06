@@ -8,6 +8,7 @@ import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
 import ProductIcon from '../../components/ProductIcon.astro';
 import ProductStatus from '../../components/ProductStatus.astro';
+import ProjectArchitecture from '../../components/ProjectArchitecture.astro';
 import Tag from '../../components/Tag.astro';
 import {
   formatProductDate,
@@ -156,6 +157,17 @@ const hasCurrentState = Boolean(data.status || data.disponibilidade || data.prox
           <div class="section-layout">
             <div><Eyebrow>Produto</Eyebrow><h2 id="funcionalidades-title">Principais funcionalidades.</h2></div>
             <ul class="feature-grid">{data.funcionalidades.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>)}</ul>
+          </div>
+        </Container>
+      </section>
+    )}
+
+    {data.diagramaArquitetura && (
+      <section class="case-section case-section--soft" aria-labelledby="arquitetura-title">
+        <Container>
+          <div class="section-layout">
+            <div><Eyebrow>architecture.solution</Eyebrow><h2 id="arquitetura-title">Arquitetura da solução.</h2></div>
+            <ProjectArchitecture diagram={data.diagramaArquitetura} />
           </div>
         </Container>
       </section>

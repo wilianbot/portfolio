@@ -1,0 +1,34 @@
+---
+import type { CurrentFocus } from '../data/now';
+import TechnicalLabel from './TechnicalLabel.astro';
+
+interface ProductLink { name: string; href: string; }
+interface Props { focus: CurrentFocus; products?: readonly ProductLink[]; }
+const { focus, products = [] } = Astro.props;
+---
+
+<div class="now-panel">
+  <header><TechnicalLabel as="span">system.now</TechnicalLabel><span><i aria-hidden="true"></i> atualizado</span></header>
+  <dl>
+    <div><dt>working_on:</dt><dd><ul><li>{focus.workingAt}</li></ul></dd></div>
+    <div><dt>studying:</dt><dd><ul>{focus.studying.map((item) => <li>{item}</li>)}</ul></dd></div>
+    {products.length > 0 && <div><dt>building:</dt><dd><ul>{products.map((product) => <li><a href={product.href}>{product.name}</a></li>)}</ul></dd></div>}
+    <div><dt>interests:</dt><dd><ul>{focus.interests.map((item) => <li>{item}</li>)}</ul></dd></div>
+  </dl>
+</div>
+
+<style>
+  .now-panel { overflow: hidden; border: var(--border-thin); border-radius: var(--radius-medium); background: var(--dark-section); color: var(--dark-text); box-shadow: var(--shadow-card); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-bottom: 1px solid rgb(255 255 255 / 10%); }
+  header :global(.technical-label) { color: var(--dark-muted); }
+  header > span:last-child { display: flex; align-items: center; gap: var(--space-2); color: var(--dark-muted); font-family: var(--font-mono); font-size: var(--font-label); }
+  header i { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--success); }
+  dl { display: grid; gap: var(--space-4); margin: 0; padding: var(--space-5); font-family: var(--font-mono); font-size: var(--font-code); }
+  dl > div { display: grid; grid-template-columns: minmax(7rem, 0.32fr) minmax(0, 1fr); gap: var(--space-3); }
+  dt { color: #a99cff; }
+  dd { margin: 0; }
+  ul { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; }
+  li::before { color: var(--dark-muted); content: '- '; }
+  a { color: var(--dark-text); }
+  @media (max-width: 35rem) { dl > div { grid-template-columns: 1fr; gap: var(--space-1); } ul { flex-direction: column; gap: var(--space-1); } }
+</style>

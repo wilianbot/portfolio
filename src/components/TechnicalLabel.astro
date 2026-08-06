@@ -1,0 +1,22 @@
+---
+interface Props {
+  as?: 'p' | 'span';
+}
+
+const { as: Element = 'p' }: Props = Astro.props;
+---
+
+<Element class="technical-label"><slot /></Element>
+
+<style>
+  .technical-label {
+    margin: 0;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-label);
+    font-weight: 650;
+    letter-spacing: 0.025em;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+</style>

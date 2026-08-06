@@ -2,6 +2,8 @@
 import ProductIcon from './ProductIcon.astro';
 import ProductStatus from './ProductStatus.astro';
 import Tag from './Tag.astro';
+import ArchitectureMiniDiagram from './ArchitectureMiniDiagram.astro';
+import TechnicalLabel from './TechnicalLabel.astro';
 import type { Product } from '../lib/products';
 
 interface Props {
@@ -12,7 +14,7 @@ interface Props {
 
 const { product, index, compact = false } = Astro.props;
 const { data } = product;
-const tags = data.tecnologiasPrincipais?.slice(0, 3) ?? [];
+const tags = data.tecnologiasPrincipais?.slice(0, 4) ?? [];
 const detailHref = `/produtos/${data.slug}/`;
 ---
 
@@ -25,6 +27,7 @@ const detailHref = `/produtos/${data.slug}/`;
   </div>
 
   <div class="product-card__content">
+    <TechnicalLabel>PROJECT_{String(index ?? data.ordem ?? '').padStart(2, '0')} · /products/{data.slug}</TechnicalLabel>
     {data.categoria && <p class="product-card__category">{data.categoria}</p>}
     <h3 id={`produto-${data.slug}`}><a href={detailHref}>{data.nome}</a></h3>
     {data.descricaoCurta && <p class="product-card__description">{data.descricaoCurta}</p>}
@@ -32,6 +35,13 @@ const detailHref = `/produtos/${data.slug}/`;
       <ul class="product-card__tags" aria-label="Tecnologias principais">
         {tags.map((tag) => <li><Tag>{tag}</Tag></li>)}
       </ul>
+    )}
+    {data.diagramaArquitetura && (
+      <ArchitectureMiniDiagram
+        compact
+        label={`Arquitetura resumida de ${data.nome}: ${data.diagramaArquitetura.descricao}`}
+        nodes={data.diagramaArquitetura.etapas.slice(0, 4).map((step) => ({ label: step.nome }))}
+      />
     )}
   </div>
 
@@ -73,7 +83,7 @@ const detailHref = `/produtos/${data.slug}/`;
   }
 
   .product-card__category {
-    margin-bottom: var(--space-2);
+    margin: var(--space-2) 0;
     color: var(--text-muted);
     font-size: var(--font-label);
     font-weight: 700;
@@ -107,6 +117,8 @@ const detailHref = `/produtos/${data.slug}/`;
     padding: 0;
     list-style: none;
   }
+
+  .product-card__content > :global(.architecture-mini) { margin-top: var(--space-4); }
 
   .product-card__meta {
     display: flex;

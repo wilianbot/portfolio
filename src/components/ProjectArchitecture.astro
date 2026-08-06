@@ -1,0 +1,28 @@
+---
+import ArchitectureMiniDiagram from './ArchitectureMiniDiagram.astro';
+
+interface Props {
+  diagram: {
+    descricao: string;
+    etapas: readonly { nome: string; detalhe?: string }[];
+  };
+}
+
+const { diagram } = Astro.props;
+---
+
+<div class="project-architecture">
+  <p>{diagram.descricao}</p>
+  <ArchitectureMiniDiagram
+    label={diagram.descricao}
+    nodes={diagram.etapas.map((step) => ({ label: step.nome, detail: step.detalhe }))}
+  />
+</div>
+
+<style>
+  .project-architecture { padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid rgb(255 255 255 / 12%); border-radius: var(--radius-medium); background: var(--dark-section-soft); }
+  p { max-width: var(--width-reading); color: var(--dark-muted); }
+  .project-architecture :global(.architecture-mini) { border-color: rgb(255 255 255 / 16%); background: rgb(255 255 255 / 2%); }
+  .project-architecture :global(.technical-label) { color: var(--dark-muted); }
+  .project-architecture :global(.architecture-mini li > span) { border-color: rgb(255 255 255 / 12%); background: var(--dark-section); color: var(--dark-text); }
+</style>

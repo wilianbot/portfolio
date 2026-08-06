@@ -1,0 +1,46 @@
+---
+import TechnicalLabel from './TechnicalLabel.astro';
+
+export interface ArchitectureNode {
+  label: string;
+  detail?: string;
+}
+
+interface Props {
+  nodes: readonly ArchitectureNode[];
+  label: string;
+  compact?: boolean;
+}
+
+const { nodes, label, compact = false } = Astro.props;
+---
+
+<figure class:list={['architecture-mini', compact && 'architecture-mini--compact']} role="img" aria-label={label}>
+  <TechnicalLabel as="span">architecture.flow</TechnicalLabel>
+  <ol>
+    {nodes.map((node, index) => (
+      <li>
+        <span>{node.label}{node.detail && <small>{node.detail}</small>}</span>
+        {index < nodes.length - 1 && <i aria-hidden="true">→</i>}
+      </li>
+    ))}
+  </ol>
+</figure>
+
+<style>
+  .architecture-mini { min-width: 0; margin: 0; padding: var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius-small); background: color-mix(in srgb, var(--surface) 82%, transparent); }
+  ol { display: flex; align-items: stretch; gap: 0; margin: var(--space-3) 0 0; padding: 0; list-style: none; }
+  li { display: flex; min-width: 0; align-items: center; }
+  li > span { display: grid; min-height: 2.75rem; padding: 0.5rem 0.7rem; border: var(--border-thin); border-radius: 0.45rem; background: var(--surface); color: var(--text-primary); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; line-height: 1.2; place-items: center; text-align: center; }
+  small { display: block; margin-top: 0.25rem; color: var(--text-muted); font-family: var(--font-sans); font-size: 0.68rem; font-weight: 500; }
+  i { padding-inline: 0.35rem; color: var(--primary); font-family: var(--font-mono); font-style: normal; }
+  .architecture-mini--compact { padding: var(--space-3); }
+  .architecture-mini--compact :global(.technical-label) { font-size: 0.68rem; }
+  .architecture-mini--compact small { display: none; }
+  @media (max-width: 34rem) {
+    ol { align-items: stretch; flex-direction: column; }
+    li { flex-direction: column; }
+    li > span { width: 100%; }
+    i { padding-block: 0.2rem; transform: rotate(90deg); }
+  }
+</style>

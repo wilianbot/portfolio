@@ -1,4 +1,5 @@
 export interface ProfessionalExperience {
+  id: 'vision' | 'lts' | 'expresso' | 'lionbridge';
   company: string;
   role: string;
   period: string;
@@ -12,6 +13,7 @@ export interface ProfessionalExperience {
 
 export const professionalExperiences: readonly ProfessionalExperience[] = [
   {
+    id: 'vision',
     company: 'Vision System',
     role: 'Programador de Sistemas — Trainee',
     period: 'Julho de 2025 — Atual',
@@ -32,6 +34,7 @@ export const professionalExperiences: readonly ProfessionalExperience[] = [
     emphasis: 'technical',
   },
   {
+    id: 'lts',
     company: 'LTS — Laboratório de Tecnologias em Software',
     role: 'Estagiário de Desenvolvimento de Software',
     period: 'Maio de 2024 — Junho de 2025',
@@ -54,6 +57,7 @@ export const professionalExperiences: readonly ProfessionalExperience[] = [
     emphasis: 'technical',
   },
   {
+    id: 'expresso',
     company: 'Expresso São Miguel',
     role: 'Auxiliar Administrativo',
     period: 'Maio de 2022 — Maio de 2024',
@@ -72,6 +76,7 @@ export const professionalExperiences: readonly ProfessionalExperience[] = [
     emphasis: 'supporting',
   },
   {
+    id: 'lionbridge',
     company: 'Lionbridge',
     role: 'Avaliador de Mídias',
     period: 'Janeiro de 2021 — Fevereiro de 2022',

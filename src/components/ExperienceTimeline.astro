@@ -1,0 +1,62 @@
+---
+import type { ProfessionalExperience } from '../data/experience';
+import Tag from './Tag.astro';
+import TechnicalLabel from './TechnicalLabel.astro';
+import TextLink from './TextLink.astro';
+
+interface Props {
+  experiences: readonly ProfessionalExperience[];
+  detailed?: boolean;
+  limit?: number;
+}
+
+const { experiences, detailed = false, limit } = Astro.props;
+const items = typeof limit === 'number' ? experiences.slice(0, limit) : experiences;
+---
+
+<ol class="experience-timeline">
+  {items.map((experience) => (
+    <li class:list={[experience.emphasis === 'supporting' && 'experience-timeline__item--supporting']}>
+      <span class="experience-timeline__node" aria-hidden="true"></span>
+      <article>
+        <TechnicalLabel>experience.{experience.id}</TechnicalLabel>
+        <header>
+          <div><p class="experience-timeline__company">{experience.company}</p><h3>{experience.role}</h3></div>
+          <div class="experience-timeline__meta"><span>{experience.period}</span>{experience.location && <span>{experience.location}</span>}</div>
+        </header>
+        <p class="experience-timeline__summary">{experience.summary}</p>
+        {detailed && <ul class="experience-timeline__details">{experience.details.map((detail) => <li>{detail}</li>)}</ul>}
+        {experience.technologies?.length && (
+          <ul class="experience-timeline__tags" aria-label={`Tecnologias utilizadas na ${experience.company}`}>
+            {experience.technologies.slice(0, detailed ? undefined : 4).map((technology) => <li><Tag>{technology}</Tag></li>)}
+          </ul>
+        )}
+        {experience.relatedProductSlug && detailed && <TextLink href={`/produtos/${experience.relatedProductSlug}/`} arrow="right">Ver case relacionado</TextLink>}
+      </article>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .experience-timeline { --timeline-offset: 0.55rem; display: grid; gap: var(--space-4); margin: 0; padding: 0 0 0 2.25rem; list-style: none; }
+  .experience-timeline > li { position: relative; }
+  .experience-timeline > li:not(:last-child)::before { position: absolute; top: 1rem; bottom: calc(-1 * var(--space-4) - 1rem); left: calc(-2.25rem + var(--timeline-offset)); width: 1px; background: var(--border-strong); content: ''; }
+  .experience-timeline__node { position: absolute; top: 1rem; left: -2.25rem; width: 1.15rem; height: 1.15rem; border: 0.25rem solid var(--background-soft); border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 1px var(--primary-border); }
+  article { padding: clamp(1.25rem, 3vw, 2rem); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .experience-timeline__item--supporting article { box-shadow: none; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-5); margin-top: var(--space-3); }
+  .experience-timeline__company { margin-bottom: var(--space-1); color: var(--primary); font-size: var(--font-caption); font-weight: 700; }
+  h3 { margin-bottom: var(--space-2); font-size: 1.1rem; }
+  .experience-timeline__meta { display: flex; align-items: flex-end; flex-direction: column; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--font-label); }
+  .experience-timeline__summary { max-width: 38rem; margin-block: var(--space-4); color: var(--text-secondary); }
+  .experience-timeline__details { margin: 0 0 var(--space-5); padding-left: 1.25rem; color: var(--text-secondary); }
+  .experience-timeline__details li + li { margin-top: var(--space-2); }
+  .experience-timeline__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  :global(.text-link) { margin-top: var(--space-4); }
+  @media (max-width: 35rem) {
+    .experience-timeline { padding-left: 1.5rem; }
+    .experience-timeline > li:not(:last-child)::before { left: calc(-1.5rem + var(--timeline-offset)); }
+    .experience-timeline__node { left: -1.5rem; }
+    .experience-timeline__meta { align-items: flex-start; }
+  }
+</style>

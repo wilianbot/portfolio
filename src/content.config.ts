@@ -41,6 +41,17 @@ const products = defineCollection({
       funcionalidades: textList,
       decisoesTecnicas: textList,
       arquitetura: optionalText,
+      diagramaArquitetura: z
+        .object({
+          descricao: requiredText,
+          etapas: z.array(
+            z.object({
+              nome: requiredText,
+              detalhe: optionalText,
+            }),
+          ).min(2),
+        })
+        .optional(),
       armazenamento: optionalText,
       seguranca: optionalText,
       performance: optionalText,

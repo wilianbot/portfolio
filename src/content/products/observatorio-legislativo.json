@@ -45,6 +45,16 @@
     "Uso de Redis e Celery no processamento de tarefas."
   ],
   "arquitetura": "Plataforma web com backend em Django e Django REST Framework, frontend em Next.js e React e persistência em PostgreSQL.",
+  "diagramaArquitetura": {
+    "descricao": "Fluxo confirmado da plataforma, das fontes públicas à interface web.",
+    "etapas": [
+      { "nome": "Fontes públicas", "detalhe": "APIs e documentos" },
+      { "nome": "Processamento", "detalhe": "Celery + Redis" },
+      { "nome": "Django REST API" },
+      { "nome": "PostgreSQL" },
+      { "nome": "Next.js", "detalhe": "Interface web" }
+    ]
+  },
   "armazenamento": "PostgreSQL como banco de dados relacional e Redis no suporte ao processamento de tarefas.",
   "desafios": [
     "Migrar uma solução desktop para uma plataforma web.",

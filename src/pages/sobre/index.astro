@@ -3,8 +3,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Container from '../../components/Container.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import Tag from '../../components/Tag.astro';
 import TextLink from '../../components/TextLink.astro';
+import ExperienceTimeline from '../../components/ExperienceTimeline.astro';
+import NowPanel from '../../components/NowPanel.astro';
+import StackLayers from '../../components/StackLayers.astro';
+import TechnicalLabel from '../../components/TechnicalLabel.astro';
 import { siteConfig } from '../../config/site';
 import { education } from '../../data/education';
 import { professionalExperiences } from '../../data/experience';
@@ -44,6 +47,20 @@ const personStructuredData = {
       <div class="about-introduction">
         {profile.about.map((paragraph) => <p>{paragraph}</p>)}
       </div>
+      <aside class="developer-contract" aria-hidden="true">
+        <TechnicalLabel as="span">developer.interface.ts</TechnicalLabel>
+        <pre><code><b>interface</b> Developer &#123;
+  name: string;
+  role: string;
+  interests: string[];
+&#125;
+
+<b>const</b> wilian: Developer = &#123;
+  name: <em>"Wilian Robal"</em>,
+  role: <em>"Full Stack Developer"</em>,
+  interests: [<em>"Software Architecture"</em>, <em>"Digital Products"</em>, <em>"Data Integration"</em>]
+&#125;;</code></pre>
+      </aside>
     </Container>
   </header>
 
@@ -60,7 +77,7 @@ const personStructuredData = {
     </Container>
   </section>
 
-  <section class="about-section about-section--subtle" aria-labelledby="experiencia-title">
+  <section id="experiencia" class="about-section about-section--subtle" aria-labelledby="experiencia-title">
     <Container>
       <div class="section-layout">
         <div>
@@ -68,28 +85,7 @@ const personStructuredData = {
           <h2 id="experiencia-title">Experiência profissional.</h2>
           <p class="section-note">Do trabalho administrativo ao desenvolvimento full stack de sistemas e produtos.</p>
         </div>
-        <ol class="experience-list">
-          {professionalExperiences.map((experience) => (
-            <li class:list={[experience.emphasis === 'supporting' && 'experience--supporting']}>
-              <article>
-                <header>
-                  <div><p class="experience-company">{experience.company}</p><h3>{experience.role}</h3></div>
-                  <div class="experience-meta"><span>{experience.period}</span>{experience.location && <span>{experience.location}</span>}</div>
-                </header>
-                <p class="experience-summary">{experience.summary}</p>
-                <ul class="experience-details">{experience.details.map((detail) => <li>{detail}</li>)}</ul>
-                {experience.technologies?.length && (
-                  <ul class="tag-list" aria-label={`Tecnologias utilizadas na ${experience.company}`}>
-                    {experience.technologies.map((technology) => <li><Tag>{technology}</Tag></li>)}
-                  </ul>
-                )}
-                {experience.relatedProductSlug && (
-                  <TextLink href={`/produtos/${experience.relatedProductSlug}/`} arrow="right">Ver case relacionado</TextLink>
-                )}
-              </article>
-            </li>
-          ))}
-        </ol>
+        <ExperienceTimeline experiences={professionalExperiences} detailed />
       </div>
     </Container>
   </section>
@@ -117,11 +113,7 @@ const personStructuredData = {
     <Container>
       <div class="section-layout">
         <div><Eyebrow>Repertório</Eyebrow><h2 id="tecnologias-title">Tecnologias.</h2><p class="section-note">Ferramentas e práticas utilizadas em experiências profissionais, estudos e projetos.</p></div>
-        <ul class="technology-list">
-          {skillGroups.map((group) => (
-            <li><h3>{group.name}</h3><ul class="tag-list">{group.items.map((item) => <li><Tag>{item}</Tag></li>)}</ul></li>
-          ))}
-        </ul>
+        <StackLayers groups={skillGroups} />
       </div>
     </Container>
   </section>
@@ -130,12 +122,7 @@ const personStructuredData = {
     <Container>
       <div class="section-layout">
         <div><Eyebrow>Atualmente</Eyebrow><h2 id="agora-title">Agora.</h2><p class="section-note">Informações centralizadas e fáceis de atualizar conforme o trabalho e os estudos evoluem.</p></div>
-        <div class="now-grid">
-          <div><h3>Trabalhando</h3><p>{currentFocus.workingAt}</p></div>
-          <div><h3>Estudando</h3><ul>{currentFocus.studying.map((item) => <li>{item}</li>)}</ul></div>
-          {activeProducts.length > 0 && <div><h3>Construindo</h3><ul>{activeProducts.map((product) => <li><a href={`/produtos/${product.data.slug}/`}>{product.data.nome}</a></li>)}</ul></div>}
-          <div><h3>Interesses</h3><ul>{currentFocus.interests.map((item) => <li>{item}</li>)}</ul></div>
-        </div>
+        <NowPanel focus={currentFocus} products={activeProducts.map((product) => ({ name: product.data.nome, href: `/produtos/${product.data.slug}/` }))} />
       </div>
     </Container>
   </section>
@@ -157,42 +144,29 @@ const personStructuredData = {
   .about-introduction { max-width: var(--width-reading); }
   .about-introduction p { color: var(--color-text-muted); font-size: var(--font-subtitle); }
   .about-introduction p:last-child { margin-bottom: 0; }
+  .developer-contract { max-width: var(--width-reading); margin-top: var(--space-7); overflow: hidden; border: var(--border-thin); border-radius: var(--radius-medium); background: rgb(255 255 255 / 72%); }
+  .developer-contract > :global(.technical-label) { display: block; padding: var(--space-3) var(--space-4); border-bottom: var(--border-thin); }
+  .developer-contract pre { margin: 0; padding: var(--space-4); overflow: hidden; color: var(--text-secondary); font-family: var(--font-mono); font-size: clamp(0.68rem, 1.5vw, var(--font-code)); line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .developer-contract b { color: var(--info); font-weight: 650; }
+  .developer-contract em { color: var(--primary-hover); font-style: normal; }
   .about-section, .contact-section { padding-block: var(--space-section); }
   .about-section--subtle { background: var(--color-surface-subtle); }
   .section-layout { display: grid; gap: var(--space-7); }
   h2 { max-width: 13ch; margin-bottom: var(--space-5); font-size: var(--font-title); font-weight: 650; letter-spacing: var(--tracking-tight); line-height: var(--leading-title); }
   h3 { margin-bottom: var(--space-2); font-size: 1.1rem; }
   .section-note { max-width: 25rem; color: var(--color-text-muted); }
-  .interest-list, .experience-list, .technology-list, .tag-list { margin: 0; padding: 0; list-style: none; }
+  .interest-list { margin: 0; padding: 0; list-style: none; }
   .interest-list li { display: grid; grid-template-columns: 2rem 1fr; gap: var(--space-4); margin-bottom: var(--space-3); padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
   .interest-list > li > span { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--font-label); }
   .interest-list p { max-width: 34rem; margin: 0; color: var(--color-text-muted); }
-  .experience-list { display: grid; gap: var(--space-4); }
-  .experience-list article { padding: clamp(1.25rem, 3vw, 2rem); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
-  .experience--supporting article { box-shadow: none; }
-  .experience-list header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-5); }
-  .experience-company { margin-bottom: var(--space-1); color: var(--color-accent); font-size: var(--font-caption); font-weight: 700; }
-  .experience-meta { display: flex; align-items: flex-end; flex-direction: column; color: var(--color-text-muted); font-size: var(--font-caption); }
-  .experience-summary { max-width: 38rem; margin-block: var(--space-4); color: var(--color-text-muted); }
-  .experience-details { margin: 0 0 var(--space-5); padding-left: 1.25rem; color: var(--color-text-muted); }
-  .experience-details li + li { margin-top: var(--space-2); }
-  .tag-list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .experience-list :global(.text-link) { margin-top: var(--space-4); }
   .education-stack { display: grid; gap: var(--space-4); }
-  .education-card, .language-card, .now-grid > div { padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .education-card, .language-card { padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
   .education-card > p:first-child { margin-bottom: var(--space-2); color: var(--color-accent); font-size: var(--font-caption); font-weight: 700; }
   .education-card dl, .language-card dl { display: grid; gap: var(--space-3); margin: var(--space-5) 0 0; }
   .education-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .education-card dt, .language-card dt { color: var(--color-text-muted); font-size: var(--font-label); font-weight: 700; text-transform: uppercase; }
   .education-card dd, .language-card dd { margin: var(--space-1) 0 0; }
   .education-description { margin: var(--space-5) 0 0; color: var(--color-text-muted); }
-  .technology-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: var(--space-3); }
-  .technology-list > li { min-height: 10rem; padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
-  .technology-list h3 { margin-bottom: var(--space-4); }
-  .now-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--space-3); }
-  .now-grid p, .now-grid ul { margin: 0; color: var(--color-text-muted); }
-  .now-grid ul { padding-left: 1.1rem; }
-  .now-grid a { color: var(--color-text); }
   .contact-section { background: var(--color-text); color: var(--color-background); }
   .contact-section :global(.eyebrow) { color: var(--color-background); }
   .contact-section__layout { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-6); }
@@ -201,5 +175,5 @@ const personStructuredData = {
   .contact-section nav { display: flex; flex-wrap: wrap; gap: var(--space-5); }
   .contact-section nav :global(a) { color: var(--color-background); text-decoration-color: currentColor; }
   @media (min-width: 48rem) { .section-layout { grid-template-columns: minmax(13rem, 0.55fr) minmax(0, 1.15fr); gap: clamp(3rem, 7vw, 7rem); } }
-  @media (max-width: 35rem) { .experience-meta { align-items: flex-start; } .education-card dl { grid-template-columns: 1fr; } }
+  @media (max-width: 35rem) { .education-card dl { grid-template-columns: 1fr; } }
 </style>

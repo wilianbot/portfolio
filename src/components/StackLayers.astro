@@ -1,0 +1,41 @@
+---
+import type { SkillGroup } from '../data/skills';
+import Tag from './Tag.astro';
+import TechIcon, { type TechIconName } from './TechIcon.astro';
+import TechnicalLabel from './TechnicalLabel.astro';
+
+interface Props { groups: readonly SkillGroup[]; }
+const { groups } = Astro.props;
+const iconByGroup: Record<string, TechIconName> = {
+  Frontend: 'frontend', Backend: 'backend', Mobile: 'mobile', Dados: 'database',
+  'Infraestrutura e ferramentas': 'container', 'Conceitos e práticas': 'architecture',
+};
+const layerByGroup: Record<string, string> = {
+  Frontend: 'application.layer', Backend: 'service.layer', Mobile: 'mobile.layer', Dados: 'data.layer',
+  'Infraestrutura e ferramentas': 'infrastructure.layer', 'Conceitos e práticas': 'engineering.practices',
+};
+---
+
+<ol class="stack-layers">
+  {groups.map((group, index) => (
+    <li>
+      <div class="stack-layers__heading">
+        <span class="stack-layers__icon"><TechIcon name={iconByGroup[group.name] ?? 'code'} /></span>
+        <div><TechnicalLabel>{layerByGroup[group.name] ?? group.name.toLowerCase()}</TechnicalLabel><h3>{group.name}</h3></div>
+      </div>
+      <ul>{group.items.map((item) => <li><Tag>{item}</Tag></li>)}</ul>
+      {index < groups.length - 1 && <span class="stack-layers__connector" aria-hidden="true"></span>}
+    </li>
+  ))}
+</ol>
+
+<style>
+  .stack-layers { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
+  .stack-layers > li { position: relative; display: grid; gap: var(--space-4); padding: var(--space-5); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); box-shadow: var(--shadow-small); }
+  .stack-layers__heading { display: flex; align-items: center; gap: var(--space-3); }
+  .stack-layers__icon { display: grid; width: 2.75rem; height: 2.75rem; border: 1px solid var(--primary-border); border-radius: var(--radius-small); background: var(--primary-soft); color: var(--primary); place-items: center; }
+  h3 { margin: var(--space-1) 0 0; font-size: 1.05rem; }
+  ul { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .stack-layers__connector { position: absolute; bottom: calc(-1 * var(--space-3) - 1px); left: 2.35rem; z-index: 1; width: 1px; height: var(--space-3); background: var(--primary-border); }
+  @media (min-width: 48rem) { .stack-layers > li { grid-template-columns: minmax(13rem, 0.45fr) minmax(0, 1fr); align-items: center; } }
+</style>

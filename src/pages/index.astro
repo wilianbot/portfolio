@@ -6,9 +6,13 @@ import ContactCallout from '../components/ContactCallout.astro';
 import Container from '../components/Container.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import ProductCard from '../components/ProductCard.astro';
-import ProductLabMark from '../components/ProductLabMark.astro';
 import ProductStatus from '../components/ProductStatus.astro';
 import TextLink from '../components/TextLink.astro';
+import ArchitectureMiniDiagram from '../components/ArchitectureMiniDiagram.astro';
+import CodeProfile from '../components/CodeProfile.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import NowPanel from '../components/NowPanel.astro';
+import StackLayers from '../components/StackLayers.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   filterFeaturedProducts,
@@ -18,6 +22,9 @@ import {
   validateProductCollection,
 } from '../lib/products';
 import { profile } from '../data/profile';
+import { professionalExperiences } from '../data/experience';
+import { currentFocus } from '../data/now';
+import { skillGroups } from '../data/skills';
 
 const products = sortProducts(await getCollection('products'));
 validateProductCollection(products);
@@ -41,7 +48,13 @@ const labProducts = filterLabActivityProducts(products, 2);
             <ButtonLink href="/sobre/" variant="secondary">Sobre minha jornada</ButtonLink>
           </div>
         </div>
-        <div class="hero__visual"><ProductLabMark /></div>
+        <div class="hero__visual">
+          <CodeProfile />
+          <ArchitectureMiniDiagram
+            label="Áreas de atuação conectadas: frontend, API, serviços e dados"
+            nodes={[{ label: 'Frontend' }, { label: 'API' }, { label: 'Services' }, { label: 'Data' }]}
+          />
+        </div>
       </div>
 
       <div class="focus-line">
@@ -69,7 +82,28 @@ const labProducts = filterLabActivityProducts(products, 2);
     </Container>
   </section>
 
+  <section class="home-section home-section--subtle" aria-labelledby="experiencia-home-title">
+    <Container>
+      <div class="section-heading">
+        <div><Eyebrow>Experiência · timeline</Eyebrow><h2 id="experiencia-home-title">Sistemas reais, evolução contínua.</h2></div>
+        <p>Um resumo da experiência recente em desenvolvimento, integração e dados.</p>
+      </div>
+      <ExperienceTimeline experiences={professionalExperiences} limit={2} />
+      <div class="section-action"><TextLink href="/sobre/#experiencia" arrow="right">Ver trajetória completa</TextLink></div>
+    </Container>
+  </section>
+
   <AboutSection />
+
+  <section class="home-section" aria-labelledby="atuacao-title">
+    <Container>
+      <div class="section-heading">
+        <div><Eyebrow>Arquitetura · camadas</Eyebrow><h2 id="atuacao-title">Áreas que trabalho de forma integrada.</h2></div>
+        <p>Uma seleção do repertório técnico, organizada pelo papel de cada camada no sistema.</p>
+      </div>
+      <StackLayers groups={skillGroups.slice(0, 5).map((group) => ({ ...group, items: group.items.slice(0, 4) }))} />
+    </Container>
+  </section>
 
   {labProducts.length > 0 && (
     <section class="lab-section" aria-labelledby="laboratorio-title">
@@ -96,12 +130,26 @@ const labProducts = filterLabActivityProducts(products, 2);
     </section>
   )}
 
+  <section class="home-section home-section--subtle" aria-labelledby="agora-home-title">
+    <Container>
+      <div class="section-heading">
+        <div><Eyebrow>system.now</Eyebrow><h2 id="agora-home-title">Agora.</h2></div>
+        <p>Trabalho, estudos e interesses que orientam a evolução profissional neste momento.</p>
+      </div>
+      <NowPanel
+        focus={currentFocus}
+        products={labProducts.map((product) => ({ name: product.data.nome, href: `/produtos/${product.data.slug}/` }))}
+      />
+    </Container>
+  </section>
+
   <ContactCallout />
 </BaseLayout>
 
 <style>
   .hero { overflow: hidden; padding-block: clamp(3.5rem, 8vw, 6.5rem) var(--space-6); }
   .hero__grid { display: grid; align-items: center; gap: var(--space-7); }
+  .hero__visual { display: grid; gap: var(--space-4); min-width: 0; }
   h1 { max-width: 18ch; margin-bottom: var(--space-5); font-size: var(--font-display); font-weight: 740; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
   .hero__title-line { display: block; }
   .hero__title-accent { color: var(--primary); }
@@ -112,8 +160,9 @@ const labProducts = filterLabActivityProducts(products, 2);
   .focus-line ul { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); margin: 0; padding: 0; color: var(--text-secondary); list-style: none; }
   .focus-line li { display: flex; align-items: center; gap: var(--space-5); }
   .focus-line li:not(:last-child)::after { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--primary); content: ''; }
-  .products-section, .lab-section { padding-block: var(--space-section); }
+  .products-section, .lab-section, .home-section { padding-block: var(--space-section); }
   .products-section { background: var(--background-soft); }
+  .home-section--subtle { background: var(--background-soft); }
   .section-heading { display: grid; gap: var(--space-5); margin-bottom: clamp(2rem, 5vw, 3.5rem); }
   .section-heading h2 { max-width: 18ch; margin: 0; font-size: var(--font-title); font-weight: 720; letter-spacing: var(--tracking-tight); line-height: var(--leading-title); }
   .section-heading > p { max-width: 30rem; margin: 0; color: var(--text-secondary); }
@@ -127,7 +176,6 @@ const labProducts = filterLabActivityProducts(products, 2);
   @media (min-width: 56rem) {
     .hero__grid { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(3rem, 7vw, 7rem); }
     .section-heading { grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.5fr); align-items: end; }
-    .hero__title-line { white-space: nowrap; }
   }
 
   @media (max-width: 35rem) {

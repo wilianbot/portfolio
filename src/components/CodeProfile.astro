@@ -1,0 +1,22 @@
+---
+import TechnicalLabel from './TechnicalLabel.astro';
+---
+
+<aside class="code-profile" aria-hidden="true">
+  <div class="code-profile__bar"><TechnicalLabel as="span">profile.ts</TechnicalLabel><span></span></div>
+  <pre><code><b>const</b> developer = &#123;
+  name: <em>"Wilian Robal"</em>,
+  role: <em>"Full Stack Developer"</em>,
+  focus: [<em>"Architecture"</em>, <em>"Products"</em>, <em>"Data"</em>],
+  location: <em>"Chapecó, SC"</em>
+&#125;;</code></pre>
+</aside>
+
+<style>
+  .code-profile { overflow: hidden; border: var(--border-thin); border-radius: var(--radius-medium); background: rgb(255 255 255 / 82%); box-shadow: var(--shadow-small); }
+  .code-profile__bar { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); border-bottom: var(--border-thin); }
+  .code-profile__bar > span:last-child { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--primary); }
+  pre { margin: 0; padding: var(--space-4); overflow: hidden; color: var(--text-secondary); font-family: var(--font-mono); font-size: clamp(0.68rem, 1.4vw, 0.78rem); line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+  b { color: var(--info); font-weight: 650; }
+  em { color: var(--primary-hover); font-style: normal; }
+</style>
