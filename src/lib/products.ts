@@ -79,7 +79,7 @@ export function getAvailableProductLinks(product: Product): ProductLink[] {
           kind: 'play-store',
         }
       : null,
-    isUsableLink(product.data.urlGithub)
+    product.data.repositorioPublico && isUsableLink(product.data.urlGithub)
       ? {
           href: product.data.urlGithub,
           label: 'Ver código no GitHub',
@@ -106,6 +106,28 @@ export function getPrimaryProductAction(
   );
 
   return action ?? null;
+}
+
+const activeLabStatuses: ReadonlySet<ProductStatus> = new Set([
+  'publicado',
+  'online',
+  'em evolução',
+  'em desenvolvimento',
+]);
+
+export function filterLabActivityProducts(
+  products: readonly Product[],
+  limit = 2,
+): Product[] {
+  const safeLimit = Math.max(0, Math.floor(limit));
+
+  return sortProducts(
+    products.filter(
+      (product) =>
+        product.data.status !== undefined &&
+        activeLabStatuses.has(product.data.status),
+    ),
+  ).slice(0, safeLimit);
 }
 
 export function validateProductCollection(products: readonly Product[]): void {

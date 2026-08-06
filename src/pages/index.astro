@@ -1,10 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 import ButtonLink from '../components/ButtonLink.astro';
 import Container from '../components/Container.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import ProductLabMark from '../components/ProductLabMark.astro';
+import ProductList from '../components/ProductList.astro';
+import Section from '../components/Section.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import TextLink from '../components/TextLink.astro';
+import {
+  filterFeaturedProducts,
+  filterLabActivityProducts,
+  formatProductStatus,
+  sortProducts,
+  validateProductCollection,
+} from '../lib/products';
+
+const products = sortProducts(await getCollection('products'));
+validateProductCollection(products);
+
+const featuredProducts = filterFeaturedProducts(products);
+const labProducts = filterLabActivityProducts(products, 2);
 ---
 
 <BaseLayout>
@@ -41,6 +58,54 @@ import SiteHeader from '../components/SiteHeader.astro';
       </div>
     </Container>
   </section>
+
+  <Section id="produtos" labelledby="produtos-title">
+    <Container>
+      <div class="section-heading">
+        <div>
+          <Eyebrow>Produtos selecionados</Eyebrow>
+          <h2 id="produtos-title">Construções do laboratório.</h2>
+        </div>
+        <p>
+          Uma seleção de aplicativos, plataformas e ferramentas criadas pela WR
+          Labs.
+        </p>
+      </div>
+
+      <ProductList products={featuredProducts} />
+
+      <div class="section-action">
+        <TextLink href="/produtos/" arrow="right">Ver todos os produtos</TextLink>
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="subtle" labelledby="laboratorio-title">
+    <Container>
+      <div class="lab-section">
+        <div>
+          <Eyebrow>Em movimento</Eyebrow>
+          <h2 id="laboratorio-title">Agora no laboratório</h2>
+        </div>
+
+        {labProducts.length > 0 ? (
+          <ul class="lab-list">
+            {labProducts.map((product) => (
+              <li>
+                <strong>{product.data.nome}</strong>
+                <span>{formatProductStatus(product.data.status)}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="lab-empty">
+            Os projetos em atividade aparecerão aqui quando o status estiver
+            confirmado.
+          </p>
+        )}
+      </div>
+    </Container>
+  </Section>
 </BaseLayout>
 
 <style>
@@ -116,10 +181,78 @@ import SiteHeader from '../components/SiteHeader.astro';
     content: '';
   }
 
+  .section-heading {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-8);
+  }
+
+  .section-heading h2,
+  .lab-section h2 {
+    max-width: 12ch;
+    margin-bottom: 0;
+    font-size: var(--font-title);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  .section-heading > p {
+    max-width: 30rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .section-action {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--space-6);
+  }
+
+  .lab-section {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .lab-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lab-list li {
+    display: flex;
+    min-height: 3.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-3);
+    border-bottom: var(--border-thin);
+  }
+
+  .lab-list span,
+  .lab-empty {
+    color: var(--color-text-muted);
+    font-size: var(--font-caption);
+  }
+
+  .lab-empty {
+    max-width: 30rem;
+    margin: 0;
+  }
+
   @media (min-width: 56rem) {
     .hero__grid {
       grid-template-columns: minmax(0, 1.5fr) minmax(17rem, 0.75fr);
       gap: clamp(2rem, 6vw, 6rem);
+    }
+
+    .section-heading,
+    .lab-section {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
+      align-items: end;
     }
   }
 

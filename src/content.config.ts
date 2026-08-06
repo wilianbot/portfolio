@@ -42,6 +42,7 @@ const products = defineCollection({
       urlPublica: optionalUrl,
       urlPlayStore: optionalUrl,
       urlGithub: optionalUrl,
+      repositorioPublico: z.boolean().default(false),
       urlPolitica: optionalUrl,
       textoAcaoPrincipal: optionalText,
       disponibilidade: optionalText,

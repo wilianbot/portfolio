@@ -3,13 +3,16 @@ interface Props {
   href: string;
   class?: string;
   label?: string;
+  arrow?: 'right' | 'up-right';
 }
 
-const { href, class: className, label } = Astro.props;
+const { href, class: className, label, arrow = 'up-right' } = Astro.props;
 ---
 
 <a class:list={['text-link', className]} {href} aria-label={label}>
-  <span><slot /></span><span class="text-link__arrow" aria-hidden="true">↗</span>
+  <span><slot /></span><span class="text-link__arrow" aria-hidden="true">
+    {arrow === 'right' ? '→' : '↗'}
+  </span>
 </a>
 
 <style>

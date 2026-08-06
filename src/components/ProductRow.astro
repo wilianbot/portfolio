@@ -1,0 +1,173 @@
+---
+import ButtonLink from './ButtonLink.astro';
+import StatusBadge from './StatusBadge.astro';
+import Tag from './Tag.astro';
+import {
+  formatProductStatus,
+  getPrimaryProductAction,
+  type Product,
+} from '../lib/products';
+
+interface Props {
+  product: Product;
+  index: number;
+}
+
+const { product, index } = Astro.props;
+const { data } = product;
+const status = formatProductStatus(data.status);
+const action = getPrimaryProductAction(product);
+const tags = data.tecnologiasPrincipais?.slice(0, 3) ?? [];
+const statusTone =
+  data.status === 'publicado' || data.status === 'online'
+    ? 'positive'
+    : data.status === 'em evolução'
+      ? 'evolving'
+      : 'planned';
+const symbol = Array.from(data.nome)[0]?.toLocaleUpperCase('pt-BR') ?? '·';
+---
+
+<li class="product-row">
+  <article aria-labelledby={`produto-${data.slug}`}>
+    <div class="product-row__identity">
+      <span class="product-row__number" aria-hidden="true">
+        {String(index).padStart(2, '0')}
+      </span>
+      <span class="product-row__symbol" aria-hidden="true">{symbol}</span>
+    </div>
+
+    <div class="product-row__content">
+      {data.categoria && <p class="product-row__category">{data.categoria}</p>}
+      <h3 id={`produto-${data.slug}`}>{data.nome}</h3>
+      {data.descricaoCurta && (
+        <p class="product-row__description">{data.descricaoCurta}</p>
+      )}
+      {tags.length > 0 && (
+        <ul class="product-row__tags" aria-label="Tecnologias principais">
+          {tags.map((tag) => <li><Tag>{tag}</Tag></li>)}
+        </ul>
+      )}
+    </div>
+
+    {(status || action) && (
+      <div class="product-row__meta">
+        {status && <StatusBadge status={statusTone}>{status}</StatusBadge>}
+        {action && (
+          <ButtonLink
+            href={action.href}
+            variant="secondary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {action.label}
+          </ButtonLink>
+        )}
+      </div>
+    )}
+  </article>
+</li>
+
+<style>
+  .product-row {
+    border-top: var(--border-thin);
+  }
+
+  .product-row:last-child {
+    border-bottom: var(--border-thin);
+  }
+
+  article {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr) minmax(10rem, 0.42fr);
+    gap: var(--space-6);
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .product-row__identity {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .product-row__number {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-label);
+  }
+
+  .product-row__symbol {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: var(--border-thin);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--font-caption);
+    font-weight: 700;
+    box-shadow: var(--shadow-small);
+  }
+
+  .product-row__category {
+    margin-bottom: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin-bottom: var(--space-4);
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  .product-row__description {
+    max-width: 36rem;
+    margin-bottom: var(--space-5);
+    color: var(--color-text-muted);
+  }
+
+  .product-row__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-row__meta {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 49.999rem) {
+    article {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    .product-row__identity {
+      justify-content: flex-start;
+    }
+
+    .product-row__number {
+      min-width: 2rem;
+      padding-top: var(--space-3);
+    }
+
+    .product-row__meta {
+      align-items: flex-start;
+    }
+  }
+</style>

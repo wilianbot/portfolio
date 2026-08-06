@@ -1,0 +1,25 @@
+---
+import ProductRow from './ProductRow.astro';
+import type { Product } from '../lib/products';
+
+interface Props {
+  products: Product[];
+  startAt?: number;
+}
+
+const { products, startAt = 1 } = Astro.props;
+---
+
+<ol class="product-list">
+  {products.map((product, index) => (
+    <ProductRow product={product} index={startAt + index} />
+  ))}
+</ol>
+
+<style>
+  .product-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

@@ -3,6 +3,7 @@ import test from 'node:test';
 import type { Product } from '../../src/lib/products.ts';
 import {
   filterFeaturedProducts,
+  filterLabActivityProducts,
   formatProductStatus,
   getAvailableProductLinks,
   getPrimaryProductAction,
@@ -73,6 +74,42 @@ test('escolhe a primeira ação real e mantém política fora da ação principa
     kind: 'public',
   });
   assert.equal(getAvailableProductLinks(onlyPolicy).length, 1);
+});
+
+test('só expõe GitHub quando o repositório é confirmado como público', () => {
+  const privateRepository = product({
+    slug: 'privado',
+    nome: 'Privado',
+    urlGithub: 'https://github.com/example/private',
+  });
+  const publicRepository = product({
+    slug: 'publico',
+    nome: 'Público',
+    urlGithub: 'https://github.com/example/public',
+    repositorioPublico: true,
+  });
+
+  assert.equal(getAvailableProductLinks(privateRepository).length, 0);
+  assert.equal(getAvailableProductLinks(publicRepository).length, 1);
+});
+
+test('limita o laboratório a projetos ativos ou em desenvolvimento', () => {
+  const products = [
+    product({ slug: 'pausado', nome: 'Pausado', ordem: 1, status: 'pausado' }),
+    product({ slug: 'online', nome: 'Online', ordem: 2, status: 'online' }),
+    product({
+      slug: 'desenvolvimento',
+      nome: 'Desenvolvimento',
+      ordem: 3,
+      status: 'em desenvolvimento',
+    }),
+    product({ slug: 'evolucao', nome: 'Evolução', ordem: 4, status: 'em evolução' }),
+  ];
+
+  assert.deepEqual(
+    filterLabActivityProducts(products).map(({ data }) => data.slug),
+    ['online', 'desenvolvimento'],
+  );
 });
 
 test('rejeita slugs e ordens duplicados na coleção', () => {
