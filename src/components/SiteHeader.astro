@@ -1,12 +1,15 @@
 ---
 import Container from './Container.astro';
+import { siteConfig } from '../config/site';
 
 const navigation = [
-  { label: 'Produtos', href: '/#produtos' },
-  { label: 'Sobre', href: '/#sobre' },
+  { label: 'Produtos', href: '/produtos/' },
+  { label: 'Sobre', href: '/sobre/' },
   { label: 'Notas', href: '/#notas' },
-  { label: 'Contato', href: '/#contato' },
+  { label: 'Contato', href: `mailto:${siteConfig.email}` },
 ] as const;
+
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="site-header">
@@ -19,7 +22,14 @@ const navigation = [
     <nav aria-label="Navegação principal">
       <ul>
         {navigation.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
+          <li>
+            <a
+              href={item.href}
+              aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
         ))}
       </ul>
     </nav>
@@ -97,6 +107,13 @@ const navigation = [
 
   nav a:active {
     color: var(--color-accent);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-underline-offset: 0.35em;
   }
 
   @media (max-width: 39.999rem) {

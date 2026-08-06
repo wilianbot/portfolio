@@ -1,0 +1,302 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Container from '../../components/Container.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import TextLink from '../../components/TextLink.astro';
+import { siteConfig } from '../../config/site';
+
+const { about } = siteConfig;
+const profileLinks = [
+  siteConfig.github
+    ? { label: 'GitHub', href: siteConfig.github, external: true }
+    : null,
+  siteConfig.linkedin
+    ? { label: 'LinkedIn', href: siteConfig.linkedin, external: true }
+    : null,
+  { label: 'Contato', href: `mailto:${siteConfig.email}`, external: false },
+].filter((link) => link !== null);
+---
+
+<BaseLayout
+  title="Sobre — WR Labs"
+  description="Sobre Wilian, sua jornada em desenvolvimento de software e a criação da WR Labs."
+>
+  <SiteHeader />
+
+  <header class="about-hero">
+    <Container>
+      <Eyebrow>Sobre · Wilian</Eyebrow>
+      <h1>{about.title}</h1>
+      <p>{about.introduction}</p>
+    </Container>
+  </header>
+
+  <section class="about-section" aria-labelledby="interesses-title">
+    <Container>
+      <div class="section-layout">
+        <div>
+          <Eyebrow>Prática</Eyebrow>
+          <h2 id="interesses-title">O que orienta meu trabalho.</h2>
+        </div>
+
+        <ul class="interest-list">
+          {about.interests.map((interest, index) => (
+            <li>
+              <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{interest.title}</h3>
+                <p>{interest.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  </section>
+
+  <section class="about-section about-section--subtle" aria-labelledby="jornada-title">
+    <Container>
+      <div class="section-layout">
+        <div>
+          <Eyebrow>Percurso</Eyebrow>
+          <h2 id="jornada-title">Jornada em construção.</h2>
+          <p class="section-note">
+            Uma trajetória que conecta organização, software e criação de
+            produtos — sem atalhos ou títulos inflados.
+          </p>
+        </div>
+
+        <ol class="timeline">
+          {about.journey.map((event) => (
+            <li>
+              <span class="timeline__mark" aria-hidden="true"></span>
+              <div>
+                <h3>{event.title}</h3>
+                <p>{event.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Container>
+  </section>
+
+  <section class="about-section" aria-labelledby="tecnologias-title">
+    <Container>
+      <div class="section-layout">
+        <div>
+          <Eyebrow>Repertório</Eyebrow>
+          <h2 id="tecnologias-title">Tecnologia como meio.</h2>
+          <p class="section-note">
+            Grupos que organizam a prática, sem porcentagens ou níveis
+            artificiais.
+          </p>
+        </div>
+
+        <ul class="technology-list">
+          {about.technologyGroups.map((group) => (
+            <li>
+              <h3>{group.name}</h3>
+              <p>{group.description}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  </section>
+
+  <section class="contact-section" aria-labelledby="contato-title">
+    <Container>
+      <Eyebrow>Conexões</Eyebrow>
+      <div class="contact-section__layout">
+        <h2 id="contato-title">Vamos conversar.</h2>
+        <nav aria-label="Links de contato">
+          {profileLinks.map((link) => (
+            <TextLink href={link.href} arrow={link.external ? 'up-right' : 'right'}>
+              {link.label}
+            </TextLink>
+          ))}
+        </nav>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding-block: clamp(4rem, 11vw, 8.5rem);
+    border-bottom: var(--border-thin);
+  }
+
+  .about-hero h1 {
+    max-width: 15ch;
+    margin-bottom: var(--space-6);
+    font-size: clamp(2.75rem, 8vw, 6rem);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 0.98;
+  }
+
+  .about-hero > :global(.container) > p {
+    max-width: var(--width-reading);
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .about-section,
+  .contact-section {
+    padding-block: var(--space-section);
+    border-bottom: var(--border-thin);
+  }
+
+  .about-section--subtle {
+    background: var(--color-surface-subtle);
+  }
+
+  .section-layout {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  h2 {
+    max-width: 12ch;
+    margin-bottom: var(--space-5);
+    font-size: var(--font-title);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  .section-note {
+    max-width: 24rem;
+    color: var(--color-text-muted);
+  }
+
+  .interest-list,
+  .technology-list,
+  .timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .interest-list li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-5);
+    border-top: var(--border-thin);
+  }
+
+  .interest-list > li > span {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-label);
+  }
+
+  h3 {
+    margin-bottom: var(--space-2);
+    font-size: var(--font-body);
+  }
+
+  .interest-list p,
+  .technology-list p,
+  .timeline p {
+    max-width: 34rem;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .timeline {
+    position: relative;
+  }
+
+  .timeline::before {
+    position: absolute;
+    top: var(--space-3);
+    bottom: var(--space-3);
+    left: 0.3125rem;
+    width: 1px;
+    background: var(--color-border-strong);
+    content: '';
+  }
+
+  .timeline li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: var(--space-4);
+    padding-bottom: var(--space-7);
+  }
+
+  .timeline li:last-child {
+    padding-bottom: 0;
+  }
+
+  .timeline__mark {
+    position: relative;
+    z-index: 1;
+    width: 0.6875rem;
+    height: 0.6875rem;
+    margin-top: 0.4rem;
+    border: 0.1875rem solid var(--color-surface-subtle);
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
+  .technology-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    border-top: var(--border-thin);
+    border-left: var(--border-thin);
+  }
+
+  .technology-list li {
+    min-height: 9rem;
+    padding: var(--space-5);
+    border-right: var(--border-thin);
+    border-bottom: var(--border-thin);
+  }
+
+  .contact-section {
+    background: var(--color-text);
+    color: var(--color-background);
+  }
+
+  .contact-section :global(.eyebrow) {
+    color: var(--color-background);
+  }
+
+  .contact-section__layout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .contact-section h2 {
+    margin: 0;
+  }
+
+  .contact-section nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+  }
+
+  .contact-section nav :global(a) {
+    color: var(--color-background);
+    text-decoration-color: currentColor;
+  }
+
+  @media (min-width: 48rem) {
+    .section-layout {
+      grid-template-columns: minmax(13rem, 0.6fr) minmax(0, 1fr);
+      gap: clamp(3rem, 8vw, 8rem);
+    }
+  }
+</style>
