@@ -1,118 +1,77 @@
 <div class="lab-mark" aria-hidden="true">
-  <span class="lab-mark__axis lab-mark__axis--horizontal"></span>
-  <span class="lab-mark__axis lab-mark__axis--vertical"></span>
+  <span class="lab-mark__glow"></span>
   <span class="lab-mark__orbit lab-mark__orbit--outer"></span>
+  <span class="lab-mark__orbit lab-mark__orbit--middle"></span>
   <span class="lab-mark__orbit lab-mark__orbit--inner"></span>
   <span class="lab-mark__point lab-mark__point--one"></span>
   <span class="lab-mark__point lab-mark__point--two"></span>
   <span class="lab-mark__point lab-mark__point--three"></span>
   <span class="lab-mark__point lab-mark__point--four"></span>
-  <span class="lab-mark__core">WR</span>
-  <span class="lab-mark__index">04 / LAB</span>
+  <span class="lab-mark__core"><strong>WR</strong><small>Labs</small></span>
 </div>
 
 <style>
   .lab-mark {
     position: relative;
-    width: min(100%, 25rem);
+    width: min(100%, 26rem);
     aspect-ratio: 1;
     margin-inline: auto;
-    color: var(--color-text-muted);
   }
 
-  .lab-mark__axis,
+  .lab-mark__glow,
   .lab-mark__orbit,
   .lab-mark__point,
-  .lab-mark__core,
-  .lab-mark__index {
+  .lab-mark__core {
     position: absolute;
   }
 
-  .lab-mark__axis {
-    background: var(--color-border);
-  }
-
-  .lab-mark__axis--horizontal {
-    top: 50%;
-    right: 4%;
-    left: 4%;
-    height: 1px;
-  }
-
-  .lab-mark__axis--vertical {
-    top: 4%;
-    bottom: 4%;
-    left: 50%;
-    width: 1px;
+  .lab-mark__glow {
+    inset: 18%;
+    border-radius: 50%;
+    background: rgb(105 86 232 / 12%);
+    filter: blur(2rem);
   }
 
   .lab-mark__orbit {
-    inset: 9%;
-    border: var(--border-thin);
+    border: 1px solid var(--border-strong);
     border-radius: 50%;
   }
 
-  .lab-mark__orbit--inner {
-    inset: 28%;
-    border-style: dashed;
-  }
+  .lab-mark__orbit--outer { inset: 4%; }
+  .lab-mark__orbit--middle { inset: 20%; border-style: dashed; }
+  .lab-mark__orbit--inner { inset: 35%; }
 
   .lab-mark__point {
     width: 0.75rem;
     height: 0.75rem;
-    border: 0.1875rem solid var(--color-background);
+    border: 0.2rem solid var(--background);
     border-radius: 50%;
-    background: var(--color-text-muted);
-    box-shadow: 0 0 0 1px var(--color-border-strong);
+    background: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary-border);
   }
 
-  .lab-mark__point--one {
-    top: 7.5%;
-    left: calc(50% - 0.375rem);
-    background: var(--color-accent);
-  }
-
-  .lab-mark__point--two {
-    top: calc(50% - 0.375rem);
-    right: 7.5%;
-  }
-
-  .lab-mark__point--three {
-    bottom: 7.5%;
-    left: calc(50% - 0.375rem);
-  }
-
-  .lab-mark__point--four {
-    top: calc(50% - 0.375rem);
-    left: 7.5%;
-  }
+  .lab-mark__point--one { top: 2.5%; left: calc(50% - 0.375rem); }
+  .lab-mark__point--two { top: 32%; right: 11%; background: var(--info); }
+  .lab-mark__point--three { bottom: 12%; left: 18%; background: var(--warning); }
+  .lab-mark__point--four { top: calc(50% - 0.375rem); left: 19%; background: var(--success); }
 
   .lab-mark__core {
-    inset: 39%;
+    inset: 38%;
     display: grid;
-    place-items: center;
-    border: 1px solid var(--color-text);
+    align-content: center;
+    justify-items: center;
+    border: 1px solid rgb(255 255 255 / 10%);
     border-radius: 50%;
-    background: var(--color-background);
-    color: var(--color-text);
-    font-size: clamp(0.75rem, 2vw, 1rem);
-    font-weight: 750;
-    letter-spacing: -0.06em;
+    background: var(--dark-section);
+    color: var(--dark-text);
+    box-shadow: 0 1rem 3rem rgb(17 19 27 / 20%);
+    line-height: 1;
   }
 
-  .lab-mark__index {
-    right: 5%;
-    bottom: 2%;
-    padding-inline: var(--space-2);
-    background: var(--color-background);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: var(--tracking-label);
-  }
+  .lab-mark__core strong { font-size: clamp(0.9rem, 2vw, 1.2rem); letter-spacing: -0.08em; }
+  .lab-mark__core small { margin-top: var(--space-1); color: var(--dark-muted); font-size: 0.55rem; }
 
-  @media (max-width: 39.999rem) {
-    .lab-mark {
-      width: min(82vw, 18rem);
-    }
+  @media (max-width: 43.999rem) {
+    .lab-mark { width: min(78vw, 19rem); }
   }
 </style>

@@ -1,0 +1,121 @@
+---
+import Container from './Container.astro';
+import Eyebrow from './Eyebrow.astro';
+import TextLink from './TextLink.astro';
+---
+
+<section class="about-lab" aria-labelledby="about-lab-title">
+  <Container>
+    <div class="about-lab__layout">
+      <div class="about-lab__content">
+        <Eyebrow>Sobre</Eyebrow>
+        <h2 id="about-lab-title">Desenvolvendo produtos enquanto evoluo como profissional.</h2>
+        <p>
+          Sou Wilian, desenvolvedor de software e estudante de Sistemas de
+          Informação. Crio aplicações web e mobile através da WR Labs, unindo
+          engenharia, produto e experiência do usuário.
+        </p>
+        <TextLink href="/sobre/" arrow="right">Conhecer minha jornada</TextLink>
+      </div>
+
+      <div class="about-lab__details">
+        <ul>
+          <li><span aria-hidden="true">01</span> Aplicações web e mobile</li>
+          <li><span aria-hidden="true">02</span> Produtos próprios</li>
+          <li><span aria-hidden="true">03</span> Desenvolvimento full stack</li>
+          <li><span aria-hidden="true">04</span> Chapecó, Santa Catarina</li>
+        </ul>
+        <div class="about-lab__mark" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-lab {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--space-section);
+    background: var(--dark-section);
+    color: var(--dark-text);
+  }
+
+  .about-lab__layout {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .about-lab :global(.eyebrow) { color: var(--dark-muted); }
+  .about-lab :global(.eyebrow)::before { background: #8d7cf1; }
+
+  h2 {
+    max-width: 15ch;
+    margin-bottom: var(--space-5);
+    color: var(--dark-text);
+    font-size: var(--font-title);
+    font-weight: 720;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-title);
+  }
+
+  p {
+    max-width: 38rem;
+    margin-bottom: var(--space-6);
+    color: var(--dark-muted);
+    font-size: var(--font-subtitle);
+  }
+
+  .about-lab :global(.text-link) { color: var(--dark-text); text-decoration-color: rgb(255 255 255 / 25%); }
+
+  .about-lab__details { position: relative; min-width: 0; }
+
+  ul {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgb(255 255 255 / 12%);
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid rgb(255 255 255 / 12%);
+    color: var(--dark-text);
+  }
+
+  li span { color: var(--dark-muted); font-family: var(--font-mono); font-size: var(--font-label); }
+
+  .about-lab__mark {
+    position: absolute;
+    right: -4rem;
+    bottom: -7rem;
+    width: 18rem;
+    aspect-ratio: 1;
+    border: 1px solid rgb(141 124 241 / 22%);
+    border-radius: 50%;
+  }
+
+  .about-lab__mark::before,
+  .about-lab__mark::after {
+    position: absolute;
+    border: 1px solid rgb(141 124 241 / 18%);
+    border-radius: 50%;
+    content: '';
+  }
+
+  .about-lab__mark::before { inset: 20%; }
+  .about-lab__mark::after { inset: 40%; }
+  .about-lab__mark i { position: absolute; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: #8d7cf1; }
+  .about-lab__mark i:nth-child(1) { top: 7%; left: 48%; }
+  .about-lab__mark i:nth-child(2) { right: 13%; bottom: 25%; }
+  .about-lab__mark i:nth-child(3) { bottom: 15%; left: 18%; }
+
+  @media (min-width: 56rem) {
+    .about-lab__layout { grid-template-columns: minmax(0, 1.15fr) minmax(20rem, 0.7fr); align-items: center; gap: clamp(4rem, 9vw, 8rem); }
+  }
+</style>

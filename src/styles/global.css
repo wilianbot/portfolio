@@ -5,6 +5,7 @@
 }
 
 html {
+  overflow-x: hidden;
   background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -17,11 +18,13 @@ body {
   min-width: 20rem;
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
   background: var(--color-background);
 }
 
 button,
-a {
+a,
+summary {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -33,6 +36,7 @@ a {
 
 a:focus-visible,
 button:focus-visible,
+summary:focus-visible,
 [tabindex]:focus-visible {
   outline: 0;
   box-shadow: var(--shadow-focus);
@@ -52,11 +56,17 @@ p {
 h1,
 h2,
 h3 {
+  color: var(--text-primary);
   text-wrap: balance;
 }
 
 p {
   text-wrap: pretty;
+}
+
+img,
+svg {
+  max-width: 100%;
 }
 
 ::selection {
@@ -68,7 +78,7 @@ p {
   display: grid;
   align-content: center;
   width: min(100% - (2 * var(--gutter)), var(--width-content));
-  min-height: 100vh;
+  min-height: 70vh;
   margin-inline: auto;
   padding-block: var(--space-section);
 }
@@ -82,12 +92,22 @@ p {
 }
 
 .page-shell h1 {
-  max-width: 12ch;
+  max-width: 15ch;
   margin: var(--space-2) 0 var(--space-5);
-  font-size: var(--font-display);
-  font-weight: 650;
+  font-size: var(--font-title);
+  font-weight: 720;
   letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-display);
+  line-height: var(--leading-title);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (hover: hover) {

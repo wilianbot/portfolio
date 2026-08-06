@@ -81,7 +81,6 @@ const ogFiles = [
   'og/products/prontodoc.jpg',
   'og/products/gestoriza.jpg',
   'og/products/chronos.jpg',
-  'og/products/zapwriter.jpg',
   'og/products/observatorio-legislativo.jpg',
 ];
 for (const file of ogFiles) {

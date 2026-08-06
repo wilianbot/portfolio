@@ -57,7 +57,7 @@ Usar estes dados confirmados:
 - Nome: WR Labs
 - Contato: `wrlabs.apps@gmail.com`
 - Idioma inicial: Portugues do Brasil
-- Projetos conhecidos: ProntoDoc, Gestoriza, Chronos, ZapWriter e Observatorio Legislativo de Chapeco
+- Projetos conhecidos: ProntoDoc, Gestoriza, Chronos e Observatorio Legislativo de Chapeco
 
 Permitir projetos futuros e nao assumir que os projetos conhecidos estao publicados.
 

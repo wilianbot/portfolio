@@ -74,15 +74,15 @@ const publishedNotes = sortPublishedNotes(await getCollection('notes'));
 
 <style>
   .notes-header {
-    padding-block: clamp(4rem, 11vw, 8.5rem);
-    border-bottom: var(--border-thin);
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    background: linear-gradient(145deg, var(--background), var(--primary-soft));
   }
 
   .notes-header h1 {
     max-width: 14ch;
     margin-bottom: var(--space-6);
-    font-size: clamp(2.75rem, 8vw, 6rem);
-    font-weight: 650;
+    font-size: var(--font-display);
+    font-weight: 720;
     letter-spacing: var(--tracking-tight);
     line-height: 0.98;
   }
@@ -96,6 +96,7 @@ const publishedNotes = sortPublishedNotes(await getCollection('notes'));
 
   .notes-section {
     padding-block: var(--space-section);
+    background: var(--background-soft);
   }
 
   .visually-hidden {
@@ -114,19 +115,17 @@ const publishedNotes = sortPublishedNotes(await getCollection('notes'));
     list-style: none;
   }
 
-  .notes-list > li {
-    border-top: var(--border-thin);
-  }
-
-  .notes-list > li:last-child {
-    border-bottom: var(--border-thin);
-  }
+  .notes-list > li { margin-bottom: var(--space-4); }
 
   .notes-list article {
     display: grid;
     grid-template-columns: 3rem minmax(0, 1fr) minmax(10rem, 0.35fr);
     gap: var(--space-6);
-    padding-block: clamp(2rem, 5vw, 3.5rem);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    background: var(--surface);
+    box-shadow: var(--shadow-small);
   }
 
   .notes-list__number,
@@ -175,8 +174,11 @@ const publishedNotes = sortPublishedNotes(await getCollection('notes'));
     display: grid;
     grid-template-columns: 2.75rem minmax(0, 30rem);
     gap: var(--space-5);
-    padding-block: var(--space-7);
-    border-block: var(--border-thin);
+    padding: var(--space-6);
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    background: var(--surface);
+    box-shadow: var(--shadow-small);
   }
 
   .notes-empty > span {

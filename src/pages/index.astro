@@ -1,26 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import AboutSection from '../components/AboutSection.astro';
 import ButtonLink from '../components/ButtonLink.astro';
 import ContactCallout from '../components/ContactCallout.astro';
 import Container from '../components/Container.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import ProductCard from '../components/ProductCard.astro';
 import ProductLabMark from '../components/ProductLabMark.astro';
-import ProductList from '../components/ProductList.astro';
-import Section from '../components/Section.astro';
+import ProductStatus from '../components/ProductStatus.astro';
 import TextLink from '../components/TextLink.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import {
   filterFeaturedProducts,
   filterLabActivityProducts,
-  formatProductStatus,
+  formatProductDate,
   sortProducts,
   validateProductCollection,
 } from '../lib/products';
 
 const products = sortProducts(await getCollection('products'));
 validateProductCollection(products);
-
-const featuredProducts = filterFeaturedProducts(products);
+const featuredProducts = filterFeaturedProducts(products).slice(0, 4);
 const labProducts = filterLabActivityProducts(products, 2);
 ---
 
@@ -29,266 +29,116 @@ const labProducts = filterLabActivityProducts(products, 2);
     <Container>
       <div class="hero__grid">
         <div class="hero__content">
-          <Eyebrow>WR Labs — Product Studio</Eyebrow>
+          <Eyebrow>WR Labs — Produtos digitais</Eyebrow>
           <h1 id="hero-title">
-            Produtos digitais simples,<br /> úteis e bem construídos.
+            <span class="hero__title-line">Transformo ideias em</span>
+            <span class="hero__title-line hero__title-line--accent">produtos digitais</span>
+            <span class="hero__title-line">simples e úteis.</span>
           </h1>
           <p class="hero__description">
-            Crio aplicativos, plataformas e ferramentas para resolver problemas
-            reais, explorar ideias e transformar aprendizado em produtos.
+            Na WR Labs, cada projeto é criado para resolver problemas reais,
+            explorar novas ideias e transformar aprendizado em produtos.
           </p>
           <div class="hero__actions" role="group" aria-label="Ações principais">
-            <ButtonLink href="#produtos">Conhecer produtos</ButtonLink>
-            <ButtonLink href="/sobre/" variant="secondary">Sobre a WR Labs</ButtonLink>
+            <ButtonLink href="#produtos">Ver produtos</ButtonLink>
+            <ButtonLink href="/sobre/" variant="secondary">Conhecer minha jornada</ButtonLink>
           </div>
         </div>
-
-        <div class="hero__visual">
-          <ProductLabMark />
-        </div>
+        <div class="hero__visual"><ProductLabMark /></div>
       </div>
 
-      <ul class="principles" aria-label="Princípios da WR Labs">
-        <li>Simplicidade</li>
-        <li>Desempenho</li>
-        <li>Experiência</li>
-        <li>Evolução</li>
-      </ul>
+      <div class="focus-line">
+        <strong>Foco</strong>
+        <ul aria-label="Focos da WR Labs">
+          <li>Simplicidade</li><li>Performance</li><li>Experiência</li>
+        </ul>
+      </div>
     </Container>
   </section>
 
-  <Section id="produtos" labelledby="produtos-title">
+  <section id="produtos" class="products-section" aria-labelledby="produtos-title">
     <Container>
       <div class="section-heading">
         <div>
-          <Eyebrow>Produtos selecionados</Eyebrow>
-          <h2 id="produtos-title">Construções do laboratório.</h2>
+          <Eyebrow>Produtos</Eyebrow>
+          <h2 id="produtos-title">Construindo soluções que fazem a diferença.</h2>
         </div>
-        <p>
-          Uma seleção de aplicativos, plataformas e ferramentas criadas pela WR
-          Labs.
-        </p>
+        <p>Uma seleção de produtos e experiências desenvolvidas no laboratório.</p>
       </div>
-
-      <ProductList products={featuredProducts} />
-
-      <div class="section-action">
-        <TextLink href="/produtos/" arrow="right">Ver todos os produtos</TextLink>
+      <div class="featured-products">
+        {featuredProducts.map((product, index) => <ProductCard product={product} index={index + 1} />)}
       </div>
+      <div class="section-action"><TextLink href="/produtos/" arrow="right">Ver todos os produtos</TextLink></div>
     </Container>
-  </Section>
+  </section>
 
-  <Section tone="subtle" labelledby="laboratorio-title">
-    <Container>
-      <div class="lab-section">
-        <div>
-          <Eyebrow>Em movimento</Eyebrow>
-          <h2 id="laboratorio-title">Agora no laboratório</h2>
+  <AboutSection />
+
+  {labProducts.length > 0 && (
+    <section class="lab-section" aria-labelledby="laboratorio-title">
+      <Container>
+        <div class="section-heading">
+          <div><Eyebrow>Em movimento</Eyebrow><h2 id="laboratorio-title">Agora no laboratório</h2></div>
         </div>
-
-        {labProducts.length > 0 ? (
-          <ul class="lab-list">
-            {labProducts.map((product) => (
+        <ul class="lab-grid">
+          {labProducts.map((product) => {
+            const updatedAt = formatProductDate(product.data.ultimaAtualizacao);
+            return (
               <li>
-                <strong>{product.data.nome}</strong>
-                <span>{formatProductStatus(product.data.status)}</span>
+                <a href={`/produtos/${product.data.slug}/`}>
+                  <strong>{product.data.nome}</strong>
+                  <ProductStatus status={product.data.status} />
+                  {updatedAt && <time datetime={product.data.ultimaAtualizacao?.toISOString()}>{updatedAt}</time>}
+                  <span>Acompanhar →</span>
+                </a>
               </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="lab-empty">
-            Os projetos em atividade aparecerão aqui quando o status estiver
-            confirmado.
-          </p>
-        )}
-      </div>
-    </Container>
-  </Section>
+            );
+          })}
+        </ul>
+      </Container>
+    </section>
+  )}
 
   <ContactCallout />
 </BaseLayout>
 
 <style>
-  .hero {
-    overflow: hidden;
-    padding-block: clamp(4rem, 9vw, 7.5rem) var(--space-7);
-  }
-
-  .hero__grid {
-    display: grid;
-    align-items: center;
-    gap: var(--space-7);
-  }
-
-  .hero__content {
-    position: relative;
-    z-index: 1;
-  }
-
-  h1 {
-    max-width: 13ch;
-    margin: 0 0 var(--space-6);
-    font-size: clamp(2.625rem, 8.5vw, 5.75rem);
-    font-weight: 650;
-    letter-spacing: var(--tracking-tight);
-    line-height: 0.98;
-  }
-
-  .hero__description {
-    max-width: 38rem;
-    margin-bottom: var(--space-6);
-    color: var(--color-text-muted);
-    font-size: clamp(1.0625rem, 2vw, 1.25rem);
-    line-height: 1.6;
-  }
-
-  .hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-  }
-
-  .hero__visual {
-    min-width: 0;
-  }
-
-  .principles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-5);
-    align-items: center;
-    margin-top: clamp(3rem, 8vw, 6rem);
-    margin-bottom: 0;
-    padding-left: 0;
-    padding-top: var(--space-5);
-    border-top: var(--border-thin);
-    color: var(--color-text-muted);
-    font-size: var(--font-label);
-    font-weight: 700;
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    list-style: none;
-  }
-
-  .principles li {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-5);
-  }
-
-  .principles li:not(:last-child)::after {
-    width: 0.1875rem;
-    height: 0.1875rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-    content: '';
-  }
-
-  .section-heading {
-    display: grid;
-    gap: var(--space-5);
-    margin-bottom: var(--space-8);
-  }
-
-  .section-heading h2,
-  .lab-section h2 {
-    max-width: 12ch;
-    margin-bottom: 0;
-    font-size: var(--font-title);
-    font-weight: 650;
-    letter-spacing: var(--tracking-tight);
-    line-height: var(--leading-title);
-  }
-
-  .section-heading > p {
-    max-width: 30rem;
-    margin: 0;
-    color: var(--color-text-muted);
-  }
-
-  .section-action {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: var(--space-6);
-  }
-
-  .lab-section {
-    display: grid;
-    gap: var(--space-7);
-  }
-
-  .lab-list {
-    display: grid;
-    gap: var(--space-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .lab-list li {
-    display: flex;
-    min-height: 3.5rem;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-5);
-    padding-block: var(--space-3);
-    border-bottom: var(--border-thin);
-  }
-
-  .lab-list span,
-  .lab-empty {
-    color: var(--color-text-muted);
-    font-size: var(--font-caption);
-  }
-
-  .lab-empty {
-    max-width: 30rem;
-    margin: 0;
-  }
+  .hero { overflow: hidden; padding-block: clamp(3.5rem, 8vw, 6.5rem) var(--space-6); }
+  .hero__grid { display: grid; align-items: center; gap: var(--space-7); }
+  h1 { max-width: 18ch; margin-bottom: var(--space-5); font-size: var(--font-display); font-weight: 740; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
+  .hero__title-line { display: block; }
+  .hero__title-line--accent { color: var(--primary); }
+  .hero__description { max-width: 38rem; margin-bottom: var(--space-6); color: var(--text-secondary); font-size: clamp(1.05rem, 2vw, 1.2rem); }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .focus-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4) var(--space-6); margin-top: clamp(2.5rem, 6vw, 4.5rem); padding-top: var(--space-5); border-top: var(--border-thin); font-size: var(--font-caption); }
+  .focus-line strong { color: var(--text-primary); font-size: var(--font-label); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .focus-line ul { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-5); margin: 0; padding: 0; color: var(--text-secondary); list-style: none; }
+  .focus-line li { display: flex; align-items: center; gap: var(--space-5); }
+  .focus-line li:not(:last-child)::after { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--primary); content: ''; }
+  .products-section, .lab-section { padding-block: var(--space-section); }
+  .products-section { background: var(--background-soft); }
+  .section-heading { display: grid; gap: var(--space-5); margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .section-heading h2 { max-width: 18ch; margin: 0; font-size: var(--font-title); font-weight: 720; letter-spacing: var(--tracking-tight); line-height: var(--leading-title); }
+  .section-heading > p { max-width: 30rem; margin: 0; color: var(--text-secondary); }
+  .featured-products { display: grid; gap: var(--space-4); }
+  .section-action { display: flex; justify-content: flex-end; padding-top: var(--space-6); }
+  .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--space-4); margin: 0; padding: 0; list-style: none; }
+  .lab-grid a { display: flex; align-items: flex-start; flex-direction: column; gap: var(--space-3); min-height: 12rem; padding: var(--space-6); border: var(--border-thin); border-radius: var(--radius-medium); background: var(--surface); color: var(--text-primary); text-decoration: none; box-shadow: var(--shadow-small); }
+  .lab-grid time { color: var(--text-muted); font-size: var(--font-caption); }
+  .lab-grid a > span:last-child { margin-top: auto; color: var(--primary); font-weight: 700; }
 
   @media (min-width: 56rem) {
-    .hero__grid {
-      grid-template-columns: minmax(0, 1.5fr) minmax(17rem, 0.75fr);
-      gap: clamp(2rem, 6vw, 6rem);
-    }
-
-    .section-heading,
-    .lab-section {
-      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.55fr);
-      align-items: end;
-    }
+    .hero__grid { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(3rem, 7vw, 7rem); }
+    .section-heading { grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.5fr); align-items: end; }
+    .hero__title-line { white-space: nowrap; }
   }
 
   @media (max-width: 35rem) {
-    .hero {
-      padding-top: var(--space-7);
-    }
-
-    h1 {
-      font-size: clamp(2.5rem, 13.5vw, 4.25rem);
-    }
-
-    h1 br {
-      display: none;
-    }
-
-    .hero__actions > :global(a) {
-      width: 100%;
-    }
-
-    .principles {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-3);
-      letter-spacing: 0.06em;
-    }
-
-    .principles li {
-      gap: var(--space-3);
-    }
-
-    .principles li:not(:last-child)::after {
-      order: -1;
-    }
+    .hero { padding-top: var(--space-7); }
+    h1 { font-size: clamp(2.6rem, 13vw, 3.5rem); }
+    .hero__actions > :global(a) { width: 100%; }
+    .focus-line { align-items: flex-start; flex-direction: column; }
+    .focus-line ul { gap: var(--space-2) var(--space-3); }
+    .focus-line li { gap: var(--space-3); }
   }
 </style>

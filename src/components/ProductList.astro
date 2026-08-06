@@ -1,5 +1,5 @@
 ---
-import ProductRow from './ProductRow.astro';
+import ProductCard from './ProductCard.astro';
 import type { Product } from '../lib/products';
 
 interface Props {
@@ -12,12 +12,14 @@ const { products, startAt = 1 } = Astro.props;
 
 <ol class="product-list">
   {products.map((product, index) => (
-    <ProductRow product={product} index={startAt + index} />
+    <li><ProductCard product={product} index={startAt + index} /></li>
   ))}
 </ol>
 
 <style>
   .product-list {
+    display: grid;
+    gap: var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;

@@ -1,0 +1,21 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import { formatProductStatus, type ProductStatus } from '../lib/products';
+
+interface Props {
+  status?: ProductStatus;
+}
+
+const { status } = Astro.props;
+const label = formatProductStatus(status);
+const tone =
+  status === 'publicado' || status === 'online'
+    ? 'positive'
+    : status === 'em evolução'
+      ? 'evolving'
+      : status === 'em desenvolvimento' || status === 'conceito'
+        ? 'planned'
+        : 'neutral';
+---
+
+{label && <StatusBadge status={tone}>{label}</StatusBadge>}

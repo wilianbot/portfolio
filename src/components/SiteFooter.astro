@@ -4,24 +4,17 @@ import { siteConfig } from '../config/site';
 
 const currentYear = new Date().getFullYear();
 const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteConfig.emailSubject)}`;
-const primaryLinks = [
+const links = [
   { label: 'Produtos', href: '/produtos/' },
   { label: 'Sobre', href: '/sobre/' },
   { label: 'Notas', href: '/notas/' },
   { label: 'Contato', href: '/contato/' },
+  { label: 'Política', href: '/privacidade/' },
+  { label: 'Termos', href: '/termos/' },
 ] as const;
-const legalLinks = [
-  { label: 'Política de Privacidade', href: '/privacidade/' },
-  { label: 'Termos de Uso', href: '/termos/' },
-] as const;
-const contactLinks = [
-  siteConfig.github
-    ? { label: 'GitHub', href: siteConfig.github, external: true }
-    : null,
-  siteConfig.linkedin
-    ? { label: 'LinkedIn', href: siteConfig.linkedin, external: true }
-    : null,
-  { label: siteConfig.email, href: emailHref, external: false },
+const externalLinks = [
+  siteConfig.github ? { label: 'GitHub', href: siteConfig.github } : null,
+  siteConfig.linkedin ? { label: 'LinkedIn', href: siteConfig.linkedin } : null,
 ].filter((link) => link !== null);
 ---
 
@@ -29,61 +22,36 @@ const contactLinks = [
   <Container>
     <div class="site-footer__top">
       <div class="site-footer__brand">
-        <a href="/">WR <span>Labs</span></a>
+        <a href="/"><span>WR</span> Labs</a>
         <p>{siteConfig.tagline}</p>
       </div>
-
-      <div class="site-footer__navigation">
-        <nav aria-label="Navegação do rodapé">
-          <p>Explorar</p>
-          <ul>
-            {primaryLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
-          </ul>
-        </nav>
-
-        <nav aria-label="Informações legais">
-          <p>Legal</p>
-          <ul>
-            {legalLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
-          </ul>
-        </nav>
-
-        <nav aria-label="Perfis e contato">
-          <p>Contato</p>
-          <ul>
-            {contactLinks.map((link) => (
-              <li>
-                <a
-                  href={link.href}
-                  target={link.external ? '_blank' : undefined}
-                  rel={link.external ? 'noreferrer' : undefined}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <nav aria-label="Navegação do rodapé">
+        <ul>{links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}</ul>
+      </nav>
+      <div class="site-footer__contact">
+        {externalLinks.map((link) => (
+          <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+        ))}
+        <a href={emailHref}>{siteConfig.email}</a>
       </div>
     </div>
-
     <div class="site-footer__bottom">
       <p>© {currentYear} {siteConfig.name}</p>
-      <p>Construído com Astro e conteúdo estático.</p>
+      <p>Produtos digitais construídos com atenção.</p>
     </div>
   </Container>
 </footer>
 
 <style>
   .site-footer {
-    padding-block: var(--space-8) var(--space-5);
-    background: var(--color-text);
-    color: var(--color-background);
+    padding-block: clamp(3.5rem, 7vw, 5rem) var(--space-5);
+    background: var(--dark-section);
+    color: var(--dark-text);
   }
 
   .site-footer__top {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-7);
   }
 
   .site-footer__brand > a {
@@ -91,55 +59,53 @@ const contactLinks = [
     min-height: 2.75rem;
     align-items: center;
     gap: var(--space-2);
-    color: inherit;
-    font-size: var(--font-subtitle);
+    color: var(--dark-text);
+    font-size: 1.1rem;
     font-weight: 750;
-    letter-spacing: -0.04em;
     text-decoration: none;
   }
 
   .site-footer__brand > a span {
-    font-size: var(--font-caption);
-    font-weight: 600;
-    letter-spacing: 0;
-  }
-
-  .site-footer__brand > p {
-    max-width: 18rem;
-    margin: var(--space-3) 0 0;
-    color: color-mix(in srgb, var(--color-background) 72%, transparent);
-  }
-
-  .site-footer__navigation {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-    gap: var(--space-7);
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 18%);
+    border-radius: 0.7rem;
+    background: var(--dark-section-soft);
+    font-size: 0.65rem;
+    letter-spacing: -0.06em;
   }
 
-  nav > p {
-    margin-bottom: var(--space-3);
-    color: color-mix(in srgb, var(--color-background) 62%, transparent);
-    font-size: var(--font-label);
-    font-weight: 700;
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
+  .site-footer__brand p {
+    max-width: 19rem;
+    margin: var(--space-3) 0 0;
+    color: var(--dark-muted);
   }
 
   ul {
-    display: grid;
-    gap: var(--space-1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  nav a {
+  nav a,
+  .site-footer__contact a {
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
-    color: var(--color-background);
+    color: var(--dark-muted);
     font-size: var(--font-caption);
-    text-decoration-color: color-mix(in srgb, var(--color-background) 45%, transparent);
+    text-decoration-color: rgb(255 255 255 / 25%);
+  }
+
+  .site-footer__contact {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .site-footer__bottom {
@@ -149,18 +115,19 @@ const contactLinks = [
     gap: var(--space-3) var(--space-6);
     margin-top: var(--space-8);
     padding-top: var(--space-5);
-    border-top: 1px solid color-mix(in srgb, var(--color-background) 20%, transparent);
-    color: color-mix(in srgb, var(--color-background) 62%, transparent);
+    border-top: 1px solid rgb(255 255 255 / 12%);
+    color: var(--dark-muted);
     font-size: var(--font-label);
   }
 
-  .site-footer__bottom p {
-    margin: 0;
+  .site-footer__bottom p { margin: 0; }
+
+  @media (min-width: 52rem) {
+    .site-footer__top { grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1fr) auto; }
   }
 
-  @media (min-width: 48rem) {
-    .site-footer__top {
-      grid-template-columns: minmax(14rem, 0.75fr) minmax(0, 1.25fr);
-    }
+  @media (hover: hover) {
+    nav a:hover,
+    .site-footer__contact a:hover { color: var(--dark-text); }
   }
 </style>

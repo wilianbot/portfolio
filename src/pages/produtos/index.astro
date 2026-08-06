@@ -16,12 +16,16 @@ validateProductCollection(products);
 >
   <header class="products-header">
     <Container>
-      <Eyebrow>Arquivo de produtos</Eyebrow>
-      <h1>Produtos, estudos e construções técnicas.</h1>
-      <p>
-        Uma visão completa do que já faz parte do laboratório, sem presumir
-        publicação ou disponibilidade.
-      </p>
+      <div class="products-header__layout">
+        <div>
+          <Eyebrow>Arquivo de produtos</Eyebrow>
+          <h1>Produtos, estudos e construções técnicas.</h1>
+        </div>
+        <p>
+          Uma visão completa do que já faz parte do laboratório, sem presumir
+          publicação ou disponibilidade.
+        </p>
+      </div>
     </Container>
   </header>
 
@@ -35,13 +39,18 @@ validateProductCollection(products);
 
 <style>
   .products-header {
-    padding-block: clamp(4rem, 10vw, 8rem);
-    border-bottom: var(--border-thin);
+    padding-block: clamp(3.5rem, 8vw, 6.5rem);
+    background: linear-gradient(145deg, var(--background), var(--primary-soft));
+  }
+
+  .products-header__layout {
+    display: grid;
+    gap: var(--space-5);
   }
 
   .products-header h1 {
-    max-width: 14ch;
-    margin-bottom: var(--space-6);
+    max-width: 15ch;
+    margin-bottom: 0;
     font-size: var(--font-title);
     font-weight: 650;
     letter-spacing: var(--tracking-tight);
@@ -57,15 +66,13 @@ validateProductCollection(products);
 
   .products-main {
     padding-block: var(--space-section);
+    background: var(--background-soft);
   }
 
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
+  @media (min-width: 56rem) {
+    .products-header__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.5fr);
+      align-items: end;
+    }
   }
 </style>

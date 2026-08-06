@@ -2,7 +2,7 @@
 
 ## Conceito
 
-A identidade visual parte do conceito **Quiet Product Lab**: um laboratório de produtos digitais silencioso, organizado e cuidadoso. A marca evita códigos visuais associados a criptomoedas, agências de marketing ou efeitos tecnológicos genéricos.
+A identidade visual evolui para o conceito **Modern Product Lab**: um pequeno estúdio independente de produtos digitais, moderno, organizado, leve e humano. A marca preserva o cuidado do conceito anterior e evita códigos visuais associados a criptomoedas, agências de marketing ou efeitos tecnológicos genéricos.
 
 ## Símbolo
 
@@ -20,9 +20,10 @@ Não alterar proporções, redesenhar as letras, adicionar gradientes ou usar o 
 
 ## Cores essenciais
 
-- Fundo claro: `#f7f5f2`;
-- Texto e base escura: `#141412`;
-- Assinatura roxa: `#6746c3`;
+- Fundo claro: `#f7f7fa`;
+- Texto principal: `#18181b`;
+- Assinatura roxa: `#6956e8`;
+- Seção escura: `#11131b`;
 - Versão monocromática: preto sobre fundo transparente.
 
 Os demais tons permanecem centralizados em `src/styles/tokens.css`.

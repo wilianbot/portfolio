@@ -17,7 +17,6 @@ const cards = [
   { path: 'products/prontodoc.jpg', lines: ['ProntoDoc'], label: 'Produto · Case study' },
   { path: 'products/gestoriza.jpg', lines: ['Gestoriza'], label: 'Produto · Case study' },
   { path: 'products/chronos.jpg', lines: ['Chronos'], label: 'Produto · Case study' },
-  { path: 'products/zapwriter.jpg', lines: ['ZapWriter'], label: 'Produto · Case study' },
   {
     path: 'products/observatorio-legislativo.jpg',
     lines: ['Observatório', 'Legislativo'],

@@ -15,39 +15,22 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteC
 
 <section class="contact-callout" aria-labelledby={id}>
   <Container>
-    <Eyebrow>Contato</Eyebrow>
-    <div class="contact-callout__layout">
-      <div>
-        <Heading {id}>{siteConfig.contact.title}</Heading>
+    <div class="contact-card">
+      <div class="contact-card__content">
+        <Eyebrow>Contato</Eyebrow>
+        <Heading {id}>Tem uma ideia,<br /> projeto ou oportunidade?</Heading>
         <p>{siteConfig.contact.description}</p>
+        <div class="contact-card__actions" role="group" aria-label="Canais de contato">
+          <ButtonLink href={emailHref}>Enviar email</ButtonLink>
+          {siteConfig.linkedin && (
+            <ButtonLink href={siteConfig.linkedin} variant="secondary" target="_blank" rel="noreferrer">
+              LinkedIn
+            </ButtonLink>
+          )}
+        </div>
       </div>
-
-      <div
-        class="contact-callout__actions"
-        role="group"
-        aria-label="Canais de contato"
-      >
-        <ButtonLink href={emailHref}>Enviar email</ButtonLink>
-        {siteConfig.linkedin && (
-          <ButtonLink
-            href={siteConfig.linkedin}
-            variant="secondary"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Abrir LinkedIn
-          </ButtonLink>
-        )}
-        {siteConfig.github && (
-          <ButtonLink
-            href={siteConfig.github}
-            variant="secondary"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Abrir GitHub
-          </ButtonLink>
-        )}
+      <div class="contact-card__mark" aria-hidden="true">
+        <span>WR</span><i></i><i></i><i></i>
       </div>
     </div>
   </Container>
@@ -56,50 +39,95 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(siteC
 <style>
   .contact-callout {
     padding-block: var(--space-section);
-    border-bottom: var(--border-thin);
-    background: var(--color-accent-soft);
+    background: var(--background-soft);
   }
 
-  .contact-callout__layout {
+  .contact-card {
+    position: relative;
     display: grid;
-    gap: var(--space-7);
+    overflow: hidden;
+    min-height: 24rem;
+    padding: clamp(1.5rem, 5vw, 4.5rem);
+    border: 1px solid var(--primary-border);
+    border-radius: var(--radius-large);
+    background: linear-gradient(135deg, var(--surface) 25%, var(--primary-soft));
+  }
+
+  .contact-card__content {
+    position: relative;
+    z-index: 1;
   }
 
   h1,
   h2 {
-    max-width: 14ch;
+    max-width: 15ch;
     margin-bottom: var(--space-5);
-    font-size: clamp(2.5rem, 7vw, 5.25rem);
-    font-weight: 650;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 730;
     letter-spacing: var(--tracking-tight);
-    line-height: 0.98;
+    line-height: 1.05;
   }
 
   p {
-    max-width: var(--width-reading);
-    margin: 0;
-    color: var(--color-text-muted);
+    max-width: 36rem;
+    margin-bottom: var(--space-6);
+    color: var(--text-secondary);
     font-size: var(--font-subtitle);
   }
 
-  .contact-callout__actions {
+  .contact-card__actions {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
     gap: var(--space-3);
   }
 
-  @media (min-width: 56rem) {
-    .contact-callout__layout {
-      grid-template-columns: minmax(0, 1.25fr) minmax(17rem, 0.55fr);
-      align-items: end;
-      gap: clamp(3rem, 8vw, 8rem);
-    }
+  .contact-card__mark {
+    position: absolute;
+    right: clamp(-5rem, -3vw, -1rem);
+    bottom: clamp(-6rem, -4vw, -2rem);
+    width: clamp(15rem, 34vw, 27rem);
+    aspect-ratio: 1;
+    border: 1px solid var(--primary-border);
+    border-radius: 50%;
   }
 
-  @media (max-width: 35rem) {
-    .contact-callout__actions > :global(a) {
-      width: 100%;
-    }
+  .contact-card__mark::before,
+  .contact-card__mark::after {
+    position: absolute;
+    border: 1px solid var(--primary-border);
+    border-radius: 50%;
+    content: '';
+  }
+
+  .contact-card__mark::before { inset: 18%; }
+  .contact-card__mark::after { inset: 36%; background: var(--dark-section); }
+
+  .contact-card__mark span {
+    position: absolute;
+    z-index: 1;
+    inset: 43%;
+    display: grid;
+    place-items: center;
+    color: var(--dark-text);
+    font-size: 0.75rem;
+    font-weight: 750;
+  }
+
+  .contact-card__mark i {
+    position: absolute;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  .contact-card__mark i:nth-of-type(1) { top: 8%; left: 48%; }
+  .contact-card__mark i:nth-of-type(2) { right: 15%; bottom: 23%; background: var(--info); }
+  .contact-card__mark i:nth-of-type(3) { bottom: 17%; left: 18%; background: var(--success); }
+
+  @media (max-width: 43.999rem) {
+    .contact-card { min-height: 0; padding-bottom: 13rem; }
+    .contact-card__mark { right: -4rem; bottom: -6rem; }
+    .contact-card__actions > :global(a) { width: 100%; }
   }
 </style>

@@ -27,7 +27,7 @@ A experiência deve ser minimalista, moderna, editorial, leve, responsiva, espa�
 
 ## Conteúdo
 
-Projetos conhecidos: ProntoDoc, Gestoriza, Chronos, ZapWriter e Observatório Legislativo de Chapecó. A existência na lista não confirma publicação.
+Projetos conhecidos: ProntoDoc, Gestoriza, Chronos e Observatório Legislativo de Chapecó. A existência na lista não confirma publicação.
 
 Não exibir dados não confirmados. Informações pendentes devem permanecer configuráveis no código.
 

@@ -1,11 +1,11 @@
 ---
+import ButtonLink from './ButtonLink.astro';
 import Container from './Container.astro';
 
 const navigation = [
   { label: 'Produtos', href: '/produtos/' },
   { label: 'Sobre', href: '/sobre/' },
   { label: 'Notas', href: '/notas/' },
-  { label: 'Contato', href: '/contato/' },
 ] as const;
 
 const currentPath = Astro.url.pathname;
@@ -14,79 +14,107 @@ const currentPath = Astro.url.pathname;
 <header class="site-header">
   <Container class="site-header__inner">
     <a class="brand" href="/">
-      <span class="brand__symbol">WR</span>
+      <span class="brand__symbol">WR<span aria-hidden="true"></span></span>
       <span class="brand__name">Labs</span>
     </a>
 
-    <nav aria-label="Navegação principal">
-      <ul>
-        {navigation.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div class="desktop-navigation">
+      <nav aria-label="Navegação principal">
+        <ul>
+          {navigation.map((item) => (
+            <li>
+              <a href={item.href} aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <ButtonLink href="/contato/">Vamos conversar</ButtonLink>
+    </div>
+
+    <details class="mobile-navigation">
+      <summary><span>Menu</span><span class="menu-icon" aria-hidden="true"></span></summary>
+      <nav aria-label="Navegação principal mobile">
+        <ul>
+          {navigation.map((item) => (
+            <li>
+              <a href={item.href} aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li><a class="mobile-contact" href="/contato/">Vamos conversar</a></li>
+        </ul>
+      </nav>
+    </details>
   </Container>
 </header>
 
 <style>
   .site-header {
-    border-bottom: var(--border-thin);
-    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+    position: relative;
+    z-index: var(--z-header);
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+    background: color-mix(in srgb, var(--background) 94%, transparent);
   }
 
-  .site-header__inner {
+  .site-header :global(.site-header__inner),
+  .desktop-navigation,
+  nav ul,
+  .brand {
     display: flex;
-    min-height: 4.5rem;
-    flex-wrap: wrap;
     align-items: center;
+  }
+
+  .site-header :global(.site-header__inner) {
+    min-height: 4.5rem;
     justify-content: space-between;
-    gap: var(--space-2) var(--space-6);
-    padding-block: var(--space-3);
+    gap: var(--space-5);
   }
 
   .brand {
-    display: inline-flex;
     min-height: 2.75rem;
-    align-items: center;
     gap: var(--space-3);
-    color: var(--color-text);
-    font-weight: 700;
+    color: var(--text-primary);
+    font-weight: 750;
     text-decoration: none;
   }
 
   .brand__symbol {
+    position: relative;
     display: grid;
     width: 2.25rem;
     height: 2.25rem;
     place-items: center;
-    border: 1px solid var(--color-text);
-    border-radius: var(--radius-small);
+    border: 1px solid var(--border-strong);
+    border-radius: 0.7rem;
+    background: var(--surface);
     font-size: 0.6875rem;
-    letter-spacing: -0.06em;
-    line-height: 1;
+    letter-spacing: -0.07em;
+    box-shadow: var(--shadow-small);
+  }
+
+  .brand__symbol span {
+    position: absolute;
+    right: 0.3rem;
+    bottom: 0.3rem;
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 50%;
+    background: var(--primary);
   }
 
   .brand__name {
-    font-size: var(--font-caption);
-    letter-spacing: 0.02em;
+    font-size: 0.9375rem;
   }
 
-  nav,
-  ul {
-    min-width: 0;
+  .desktop-navigation {
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
 
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--space-2);
+  nav ul {
+    gap: var(--space-1);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -96,53 +124,105 @@ const currentPath = Astro.url.pathname;
     display: inline-flex;
     min-height: 2.75rem;
     align-items: center;
-    padding-inline: var(--space-2);
-    color: var(--color-text-muted);
-    font-size: var(--font-caption);
-    font-weight: 600;
+    padding-inline: var(--space-3);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 650;
     text-decoration: none;
-    transition: color var(--transition-fast);
-  }
-
-  nav a:active {
-    color: var(--color-accent);
   }
 
   nav a[aria-current='page'] {
-    color: var(--color-text);
-    text-decoration: underline;
-    text-decoration-color: var(--color-accent);
-    text-underline-offset: 0.35em;
+    color: var(--text-primary);
   }
 
-  @media (max-width: 39.999rem) {
-    .site-header__inner {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    nav {
-      width: 100%;
-    }
-
-    ul {
-      justify-content: space-between;
-    }
-
-    nav a {
-      padding-inline: var(--space-1);
-    }
+  .mobile-navigation {
+    display: none;
   }
 
   @media (hover: hover) {
-    .brand:hover .brand__symbol {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
+    nav a:hover {
+      color: var(--primary);
+    }
+  }
+
+  @media (max-width: 43.999rem) {
+    .desktop-navigation {
+      display: none;
     }
 
-    nav a:hover {
-      color: var(--color-text);
+    .mobile-navigation {
+      position: relative;
+      display: block;
+    }
+
+    summary {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      gap: var(--space-2);
+      padding-inline: var(--space-3);
+      border: var(--border-thin);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--text-primary);
+      font-size: var(--font-caption);
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .menu-icon,
+    .menu-icon::before {
+      display: block;
+      width: 1rem;
+      height: 1px;
+      background: currentColor;
+      content: '';
+    }
+
+    .menu-icon::before {
+      transform: translateY(0.3rem);
+    }
+
+    details[open] .menu-icon {
+      transform: rotate(45deg);
+    }
+
+    details[open] .menu-icon::before {
+      transform: rotate(90deg);
+    }
+
+    .mobile-navigation nav {
+      position: absolute;
+      top: calc(100% + var(--space-3));
+      right: 0;
+      width: min(18rem, calc(100vw - (2 * var(--gutter))));
+      padding: var(--space-3);
+      border: var(--border-thin);
+      border-radius: var(--radius-medium);
+      background: var(--surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    .mobile-navigation ul {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .mobile-navigation a {
+      width: 100%;
+      border-radius: var(--radius-small);
+    }
+
+    .mobile-contact {
+      justify-content: center;
+      margin-top: var(--space-2);
+      background: var(--primary);
+      color: #fff;
     }
   }
 </style>

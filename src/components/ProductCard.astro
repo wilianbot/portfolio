@@ -1,0 +1,171 @@
+---
+import ProductIcon from './ProductIcon.astro';
+import ProductStatus from './ProductStatus.astro';
+import Tag from './Tag.astro';
+import type { Product } from '../lib/products';
+
+interface Props {
+  product: Product;
+  index?: number;
+  compact?: boolean;
+}
+
+const { product, index, compact = false } = Astro.props;
+const { data } = product;
+const tags = data.tecnologiasPrincipais?.slice(0, 3) ?? [];
+const detailHref = `/produtos/${data.slug}/`;
+---
+
+<article class:list={['product-card', compact && 'product-card--compact']} aria-labelledby={`produto-${data.slug}`}>
+  <div class="product-card__identity">
+    <ProductIcon slug={data.slug} size={compact ? 'medium' : 'large'} />
+    {index !== undefined && (
+      <span class="product-card__number" aria-hidden="true">{String(index).padStart(2, '0')}</span>
+    )}
+  </div>
+
+  <div class="product-card__content">
+    {data.categoria && <p class="product-card__category">{data.categoria}</p>}
+    <h3 id={`produto-${data.slug}`}><a href={detailHref}>{data.nome}</a></h3>
+    {data.descricaoCurta && <p class="product-card__description">{data.descricaoCurta}</p>}
+    {tags.length > 0 && (
+      <ul class="product-card__tags" aria-label="Tecnologias principais">
+        {tags.map((tag) => <li><Tag>{tag}</Tag></li>)}
+      </ul>
+    )}
+  </div>
+
+  <div class="product-card__meta">
+    {data.status && <ProductStatus status={data.status} />}
+    <a class="product-card__action" href={detailHref} aria-label={`Ver case de ${data.nome}`}>
+      Ver case <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>
+
+<style>
+  .product-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr) minmax(9rem, 0.32fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    min-height: 12rem;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: var(--border-thin);
+    border-radius: var(--radius-medium);
+    background: var(--surface);
+    box-shadow: var(--shadow-small);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+  }
+
+  .product-card__identity {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .product-card__number {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--font-label);
+  }
+
+  .product-card__category {
+    margin-bottom: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-label);
+    font-weight: 700;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+
+  h3 {
+    margin-bottom: var(--space-3);
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+  }
+
+  h3 a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .product-card__description {
+    max-width: 35rem;
+    margin-bottom: var(--space-4);
+    color: var(--text-secondary);
+  }
+
+  .product-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-card__meta {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .product-card__action {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-primary);
+    font-size: var(--font-caption);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .product-card__action span {
+    color: var(--primary);
+    transition: transform var(--transition-fast);
+  }
+
+  .product-card--compact {
+    grid-template-columns: 3.75rem minmax(0, 1fr) auto;
+    min-height: 0;
+  }
+
+  @media (hover: hover) {
+    .product-card:hover {
+      border-color: var(--primary-border);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-2px);
+    }
+
+    .product-card:hover .product-card__action span {
+      transform: translateX(0.2rem);
+    }
+  }
+
+  @media (max-width: 47.999rem) {
+    .product-card,
+    .product-card--compact {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+
+    .product-card__identity {
+      align-items: center;
+      flex-direction: row;
+    }
+
+    .product-card__meta {
+      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+</style>

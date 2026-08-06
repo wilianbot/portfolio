@@ -1,6 +1,6 @@
 ---
 interface Props {
-  status: 'positive' | 'evolving' | 'planned';
+  status: 'positive' | 'evolving' | 'planned' | 'neutral';
   class?: string;
 }
 
@@ -19,7 +19,7 @@ const { status, class: className } = Astro.props;
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-1) var(--space-3);
-    border: 1px solid currentColor;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
     border-radius: var(--radius-pill);
     font-size: var(--font-caption);
     font-weight: 600;
@@ -46,5 +46,10 @@ const { status, class: className } = Astro.props;
   .status-badge--planned {
     background: var(--color-planned-soft);
     color: var(--color-planned);
+  }
+
+  .status-badge--neutral {
+    background: var(--color-neutral-soft);
+    color: var(--color-neutral);
   }
 </style>
