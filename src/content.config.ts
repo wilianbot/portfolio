@@ -44,12 +44,14 @@ const products = defineCollection({
       diagramaArquitetura: z
         .object({
           descricao: requiredText,
-          etapas: z.array(
-            z.object({
-              nome: requiredText,
-              detalhe: optionalText,
-            }),
-          ).min(2),
+          etapas: z
+            .array(
+              z.object({
+                nome: requiredText,
+                detalhe: optionalText,
+              }),
+            )
+            .min(2),
         })
         .optional(),
       armazenamento: optionalText,
@@ -61,6 +63,7 @@ const products = defineCollection({
       proximosPassos: textList,
       limitacoes: textList,
       imagemCapa: image().optional(),
+      imagemCapaAlt: optionalText,
       galeria: z
         .array(
           z.object({

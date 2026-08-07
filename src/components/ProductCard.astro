@@ -1,9 +1,11 @@
 ---
+import { Picture } from 'astro:assets';
 import ProductIcon from './ProductIcon.astro';
 import ProductStatus from './ProductStatus.astro';
 import Tag from './Tag.astro';
 import ArchitectureMiniDiagram from './ArchitectureMiniDiagram.astro';
 import TechnicalLabel from './TechnicalLabel.astro';
+import { getPrimaryProductAction } from '../lib/products';
 import type { Product } from '../lib/products';
 
 interface Props {
@@ -16,40 +18,103 @@ const { product, index, compact = false } = Astro.props;
 const { data } = product;
 const tags = data.tecnologiasPrincipais?.slice(0, 4) ?? [];
 const detailHref = `/produtos/${data.slug}/`;
+const action = getPrimaryProductAction(product);
 ---
 
-<article class:list={['product-card', compact && 'product-card--compact']} aria-labelledby={`produto-${data.slug}`}>
+<article
+  class:list={['product-card', compact && 'product-card--compact']}
+  aria-labelledby={`produto-${data.slug}`}
+>
   <div class="product-card__identity">
     <ProductIcon slug={data.slug} size={compact ? 'medium' : 'large'} />
-    {index !== undefined && (
-      <span class="product-card__number" aria-hidden="true">{String(index).padStart(2, '0')}</span>
-    )}
+    {
+      index !== undefined && (
+        <span class="product-card__number" aria-hidden="true">
+          {String(index).padStart(2, '0')}
+        </span>
+      )
+    }
   </div>
 
   <div class="product-card__content">
-    <TechnicalLabel>PROJECT_{String(index ?? data.ordem ?? '').padStart(2, '0')} · /products/{data.slug}</TechnicalLabel>
+    <TechnicalLabel
+      >PROJECT_{String(index ?? data.ordem ?? '').padStart(2, '0')} · /products/{
+        data.slug
+      }</TechnicalLabel
+    >
     {data.categoria && <p class="product-card__category">{data.categoria}</p>}
     <h3 id={`produto-${data.slug}`}><a href={detailHref}>{data.nome}</a></h3>
-    {data.descricaoCurta && <p class="product-card__description">{data.descricaoCurta}</p>}
-    {tags.length > 0 && (
-      <ul class="product-card__tags" aria-label="Tecnologias principais">
-        {tags.map((tag) => <li><Tag>{tag}</Tag></li>)}
-      </ul>
-    )}
-    {data.diagramaArquitetura && (
-      <ArchitectureMiniDiagram
-        compact
-        label={`Arquitetura resumida de ${data.nome}: ${data.diagramaArquitetura.descricao}`}
-        nodes={data.diagramaArquitetura.etapas.slice(0, 4).map((step) => ({ label: step.nome }))}
-      />
-    )}
+    {
+      data.descricaoCurta && (
+        <p class="product-card__description">{data.descricaoCurta}</p>
+      )
+    }
+    {
+      tags.length > 0 && (
+        <ul class="product-card__tags" aria-label="Tecnologias principais">
+          {tags.map((tag) => (
+            <li>
+              <Tag>{tag}</Tag>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      data.diagramaArquitetura && (
+        <ArchitectureMiniDiagram
+          compact
+          label={`Arquitetura resumida de ${data.nome}: ${data.diagramaArquitetura.descricao}`}
+          nodes={data.diagramaArquitetura.etapas
+            .slice(0, 4)
+            .map((step) => ({ label: step.nome }))}
+        />
+      )
+    }
   </div>
 
   <div class="product-card__meta">
+    {
+      data.imagemCapa && (
+        <a
+          class="product-card__visual"
+          href={detailHref}
+          aria-label={`Ver case de ${data.nome}`}
+        >
+          <Picture
+            src={data.imagemCapa}
+            alt={data.imagemCapaAlt ?? `Imagem de apresentação de ${data.nome}`}
+            formats={['avif', 'webp']}
+            widths={[320, 480]}
+            sizes="(max-width: 48rem) calc(100vw - 5rem), 15rem"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      )
+    }
     {data.status && <ProductStatus status={data.status} />}
-    <a class="product-card__action" href={detailHref} aria-label={`Ver case de ${data.nome}`}>
-      Ver case <span aria-hidden="true">→</span>
-    </a>
+    <div class="product-card__actions">
+      <a
+        class="product-card__action"
+        href={detailHref}
+        aria-label={`Ver case de ${data.nome}`}
+      >
+        Ver case <span aria-hidden="true">→</span>
+      </a>
+      {
+        action && (
+          <a
+            class="product-card__action"
+            href={action.href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {action.label} <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+    </div>
   </div>
 </article>
 
@@ -57,7 +122,7 @@ const detailHref = `/produtos/${data.slug}/`;
   .product-card {
     position: relative;
     display: grid;
-    grid-template-columns: 5rem minmax(0, 1fr) minmax(9rem, 0.32fr);
+    grid-template-columns: 5rem minmax(0, 1fr) minmax(12rem, 0.38fr);
     gap: clamp(1.5rem, 4vw, 3rem);
     align-items: center;
     min-height: 12rem;
@@ -66,7 +131,10 @@ const detailHref = `/produtos/${data.slug}/`;
     border-radius: var(--radius-medium);
     background: var(--surface);
     box-shadow: var(--shadow-small);
-    transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+    transition:
+      border-color var(--transition-base),
+      box-shadow var(--transition-base),
+      transform var(--transition-base);
   }
 
   .product-card__identity {
@@ -118,13 +186,43 @@ const detailHref = `/produtos/${data.slug}/`;
     list-style: none;
   }
 
-  .product-card__content > :global(.architecture-mini) { margin-top: var(--space-4); }
+  .product-card__content > :global(.architecture-mini) {
+    margin-top: var(--space-4);
+  }
 
   .product-card__meta {
     display: flex;
     align-items: flex-end;
     flex-direction: column;
     gap: var(--space-5);
+  }
+
+  .product-card__visual {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: var(--border-thin);
+    border-radius: var(--radius-small);
+    background: var(--background-soft);
+  }
+
+  .product-card__visual :global(picture),
+  .product-card__visual :global(img) {
+    display: block;
+    width: 100%;
+  }
+
+  .product-card__visual :global(img) {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-card__actions {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: var(--space-2);
   }
 
   .product-card__action {
@@ -175,9 +273,15 @@ const detailHref = `/produtos/${data.slug}/`;
 
     .product-card__meta {
       align-items: flex-start;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      width: 100%;
+    }
+
+    .product-card__visual {
+      max-width: 30rem;
+    }
+
+    .product-card__actions {
+      align-items: flex-start;
     }
   }
 </style>

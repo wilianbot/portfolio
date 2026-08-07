@@ -93,7 +93,7 @@ const hasCurrentState = Boolean(data.status || data.disponibilidade || data.prox
             {data.imagemCapa ? (
               <Picture
                 src={data.imagemCapa}
-                alt={`Imagem de apresentação de ${data.nome}`}
+                alt={data.imagemCapaAlt ?? `Imagem de apresentação de ${data.nome}`}
                 formats={['avif', 'webp']}
                 widths={[480, 800]}
                 sizes="(max-width: 56rem) calc(100vw - 2rem), 34rem"

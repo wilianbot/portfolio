@@ -2,5 +2,9 @@
   "slug": "gestoriza",
   "nome": "Gestoriza",
   "destaque": true,
-  "ordem": 2
+  "ordem": 2,
+  "imagemCapa": "../../assets/products/gestoriza-cover.png",
+  "imagemCapaAlt": "Página inicial do Gestoriza apresentando a organização de clientes, serviços e agenda.",
+  "urlPublica": "https://gestoriza.app/",
+  "textoAcaoPrincipal": "Acessar Gestoriza"
 }

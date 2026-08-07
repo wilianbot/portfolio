@@ -2,5 +2,9 @@
   "slug": "chronos",
   "nome": "Chronos",
   "destaque": true,
-  "ordem": 3
+  "ordem": 3,
+  "imagemCapa": "../../assets/products/chronos-cover.jpg",
+  "imagemCapaAlt": "Arte editorial do projeto Chronos com linhas orbitais e o nome do produto.",
+  "urlPublica": "https://chronos-qpqnb119c-wilians-projects-0752317b.vercel.app/",
+  "textoAcaoPrincipal": "Acessar Chronos"
 }
